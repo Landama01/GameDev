@@ -32,14 +32,19 @@ public:
 	bool CleanUp();
 
 	bool starting = true;
+	bool goingLeft = false;
+	bool goingRight = false;
 
 	iPoint position;
 
 	Animation* currentAnimation = nullptr;
 
-	Animation RangerIdle;
+	Animation RangerIdleR;
+	Animation RangerIdleL;
+	Animation RunRight;
+	Animation RunLeft;
 
-	SDL_Texture* idleTex;
+	SDL_Texture* RangerTex;
 };
 
 #endif // __PLAYER_H__
