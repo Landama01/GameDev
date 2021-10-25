@@ -33,7 +33,7 @@ bool Scene::Start()
 {
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
-	app->map->Load("medieval_set.tmx");
+	app->map->Load("Tileset.tmx");
 	
 	// Load music
 	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
@@ -58,16 +58,16 @@ bool Scene::Update(float dt)
 		app->SaveGameRequest();
 
 	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		app->render->camera.y -= 1;
-
-	if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		app->render->camera.y += 1;
 
+	if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		app->render->camera.y -= 1;
+
 	if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		app->render->camera.x -= 1;
+		app->render->camera.x += 1;
 
 	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		app->render->camera.x += 1;
+		app->render->camera.x -= 1;
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 
