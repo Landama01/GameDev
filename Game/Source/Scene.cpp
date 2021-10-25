@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -33,10 +34,10 @@ bool Scene::Start()
 {
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
-	app->map->Load("Tileset.tmx");
+	app->map->Load("tilesetX2.tmx");
 	
 	// Load music
-	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
+	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
 
 	return true;
 }
@@ -57,19 +58,31 @@ bool Scene::Update(float dt)
 	if(app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 		app->SaveGameRequest();
 
-	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if(app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		app->render->camera.y += 1;
 
-	if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if(app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 		app->render->camera.y -= 1;
 
-	if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if(app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280/2)
 		app->render->camera.x += 1;
 
-	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280/2)
 		app->render->camera.x -= 1;
 
-	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
+	//set camera limits
+
+	if (app->render->camera.x >= 0)
+		app->render->camera.x = 0;
+	
+	if (app->render->camera.x <= -1920)
+		app->render->camera.x = -1920;
+	
+	if (app->render->camera.y >= 300)
+		app->render->camera.y = 300;
+							
+	if (app->render->camera.y <= 130)
+		app->render->camera.y = 130;
 
 	// Draw map
 	app->map->Draw();
