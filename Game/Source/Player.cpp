@@ -121,6 +121,14 @@ bool Player::Update(float dt)
 		goingLeft = false;
 		goingRight = true;
 	}
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)	
+		Jumping = true;
+	
+	if (Jumping)
+	{
+		Jump();
+		Jumping = false;
+	}
 
 	currentAnimation->Update();
 
@@ -133,6 +141,11 @@ bool Player::PostUpdate()
 	app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
 
 	return true;
+}
+
+void Player::Jump()
+{
+	position.y -= 5.0f;
 }
 
 bool Player::CleanUp()

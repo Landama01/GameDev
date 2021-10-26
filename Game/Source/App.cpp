@@ -24,8 +24,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
-	scene = new Scene();
 	map = new Map();
+	scene = new Scene();	
 	player = new Player();
 
 	// Ordered for awake / Start / Update
@@ -298,7 +298,27 @@ bool App::LoadGame()
 {
 	bool ret = false;
 
-	//...
+	pugi::xml_document data;
+	pugi::xml_node root;
+
+	pugi::xml_parse_result result = data.load_file(SAVE_STATE_FILENAME);
+
+	if (result != NULL)
+	{
+		LOG("Loading Game State from %s", SAVE_STATE_FILENAME);
+
+		root = data.child("save_state");
+
+		ListItem<Module*>* item = modules.start;
+		ret = true;
+
+		while (item != NULL && ret == true)
+		{
+			ret = item->data->LoadState(root.child(item->data->name.GetString()));
+			item = item->next;
+		}
+	}
+	else LOG("Couldn't load Game State from %s. Pugi error: %s", SAVE_STATE_FILENAME, result.description());
 
 	loadGameRequested = false;
 
@@ -310,7 +330,25 @@ bool App::SaveGame() const
 {
 	bool ret = true;
 
-	//...
+	LOG("Saving Game State to %s...", SAVE_STATE_FILENAME);
+
+	pugi::xml_document data;
+	pugi::xml_node root;
+
+	root = data.append_child("save_state");
+
+	ListItem<Module*>* item = modules.start;
+
+	while (item != NULL && ret == true)
+	{
+		ret = item->data->SaveState(root.append_child(item->data->name.GetString()));
+		item = item->next;
+	}
+
+	if (ret == true)
+	{
+		data.save_file(SAVE_STATE_FILENAME);
+	}
 
 	saveGameRequested = false;
 

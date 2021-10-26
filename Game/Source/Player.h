@@ -28,12 +28,15 @@ public:
 	// Called before all Updates
 	bool PostUpdate();
 
+	void Jump();
+
 	// Called before quitting
 	bool CleanUp();
 
 	bool starting = true;
 	bool goingLeft = false;
 	bool goingRight = false;
+	bool Jumping = false;
 
 	iPoint position;
 

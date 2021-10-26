@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Window.h"
 #include "Render.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -95,6 +96,10 @@ bool Render::LoadState(pugi::xml_node& data)
 	camera.x = data.child("camera").attribute("x").as_int();
 	camera.y = data.child("camera").attribute("y").as_int();
 
+	app->player->position.x = data.child("PlayerPos").attribute("x").as_int();
+	app->player->position.y = data.child("PlayerPos").attribute("y").as_int();
+
+
 	return true;
 }
 
@@ -103,9 +108,13 @@ bool Render::LoadState(pugi::xml_node& data)
 bool Render::SaveState(pugi::xml_node& data) const
 {
 	pugi::xml_node cam = data.append_child("camera");
+	pugi::xml_node player = data.append_child("PlayerPos");
 
 	cam.append_attribute("x") = camera.x;
 	cam.append_attribute("y") = camera.y;
+
+	player.append_attribute("x") = app->player->position.x;
+	player.append_attribute("y") = app->player->position.y;
 
 	return true;
 }

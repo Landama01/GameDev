@@ -32,6 +32,8 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+
+	background = app->tex->Load("Assets/textures/Background.png");
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
 	app->map->Load("tilesetX2.tmx");
@@ -51,13 +53,15 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-    // L02: DONE 3: Request Load / Save when pressing L/S
-	if(app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	//DEBUG KEYS
+	if(app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 		app->LoadGameRequest();
 
-	if(app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	if(app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		app->SaveGameRequest();
 
+
+	//PLAYER MOVEMENT
 	if(app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		app->render->camera.y += 1;
 
@@ -103,6 +107,8 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
+	//app->render->DrawTexture(background, 0, 0);
+
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
@@ -114,5 +120,8 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
+	app->tex->UnLoad(background);
+
 	return true;
 }
+
