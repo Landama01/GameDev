@@ -11,21 +11,15 @@
 #include "Defs.h"
 #include "Log.h"
 
+#define initPosX 150
+#define initPosY 388
+
 Player::Player() : Module()
 {
 	name.Create("player");
 
-	position.x = 150;
-	position.y = 300;
-
-	//RangerIdle.PushBack({ 12,17,25,31 });
-	//RangerIdle.PushBack({ 60,17,25,31 });
-	//RangerIdle.PushBack({ 108,18,25,30 });
-	//RangerIdle.PushBack({ 156,18,26,30 });
-	//RangerIdle.PushBack({ 204,18,25,30 });
-	//RangerIdle.PushBack({ 252,18,24,30 });
-	//RangerIdle.speed = 0.02f;
-
+	position.x = initPosX;
+	position.y = initPosY;
 
 	//size X2
 	RangerIdleR.PushBack({ 120,9,50,62 });
@@ -105,31 +99,46 @@ bool Player::Update(float dt)
 	{
 		currentAnimation = &RangerIdleL;
 	}
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
+	if (app->scene->SceneIntro == false)
 	{
-		position.x -= 1;
-		currentAnimation = &RunLeft;
-		goingLeft = true;
-		goingRight = false;
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
+		{
+			position.x -= 1;
+			currentAnimation = &RunLeft;
+			goingLeft = true;
+			goingRight = false;
 
-	}
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
-	{
-		position.x += 1;
-		currentAnimation = &RunRight;
-		goingLeft = false;
-		goingRight = true;
-	}
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)	
-		Jumping = true;
-	
-	if (Jumping)
-	{
-		Jump();
-		Jumping = false;
-	}
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
+		{
+			position.x += 1;
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.y > -300 && GodMode == true)
+		{
+			position.y -= 1;
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.y < 530 && GodMode == true)
+		{
+			position.y += 1;
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+			Jumping = true;
 
+		if (Jumping)
+		{
+			Jump();
+			Jumping = false;
+		}
+	}
 	currentAnimation->Update();
 
 	return true;
@@ -137,8 +146,11 @@ bool Player::Update(float dt)
 
 bool Player::PostUpdate()
 {
-	SDL_Rect rect = currentAnimation->GetCurrentFrame();
-	app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
+	if (app->scene->SceneIntro == false)
+	{
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
+	}
 
 	return true;
 }

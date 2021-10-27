@@ -38,6 +38,8 @@ public:
 	bool goingRight = false;
 	bool Jumping = false;
 
+	bool GodMode = false;
+
 	iPoint position;
 
 	Animation* currentAnimation = nullptr;

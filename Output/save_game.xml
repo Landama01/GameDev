@@ -8,7 +8,7 @@
 	<map />
 	<player />
 	<renderer>
-		<camera x="-555" y="169" />
-		<PlayerPos x="1195" y="300" />
+		<camera x="0" y="130" />
+		<PlayerPos x="150" y="388" />
 	</renderer>
 </save_state>

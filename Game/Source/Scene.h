@@ -32,8 +32,11 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool SceneIntro = true;
+
 private:
 	SDL_Texture* background;
+	SDL_Texture* intro;
 };
 
 #endif // __SCENE_H__
