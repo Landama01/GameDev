@@ -8040,7 +8040,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="7" name="Colliders" width="100" height="20" opacity="0.5">
+ <layer id="7" name="Ground Colliders" width="100" height="20" opacity="0.5">
   <properties>
    <property name="Draw" value="0"/>
    <property name="Navigation" value="1"/>
