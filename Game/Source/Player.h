@@ -40,7 +40,10 @@ public:
 
 	bool GodMode = false;
 
-	iPoint position;
+	float gravity = 0.02f;
+
+	fPoint velocity;
+	fPoint position;
 
 	Animation* currentAnimation = nullptr;
 
@@ -48,6 +51,8 @@ public:
 	Animation RangerIdleL;
 	Animation RunRight;
 	Animation RunLeft;
+	Animation JumpingR;
+	Animation JumpingL;
 
 	SDL_Texture* RangerTex;
 };
