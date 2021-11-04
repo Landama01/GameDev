@@ -14,8 +14,6 @@
 #define topLimit 130
 #define botLimit 300
 
-#define initposX 150
-#define initPosY 388
 
 Scene::Scene() : Module()
 {
@@ -65,7 +63,7 @@ bool Scene::Update(float dt)
 		//DEBUG KEYS
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 		{
-			app->player->position.x = initposX;
+			app->player->position.x = initPosX;
 			app->player->position.y = initPosY;
 
 			app->render->camera.x = 0;

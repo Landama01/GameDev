@@ -10,6 +10,11 @@
 #endif
 #define NULL  0
 
+
+#define initPosX 150
+#define initPosY 288
+
+
 // Deletes a buffer
 #define RELEASE( x ) \
 	{						\

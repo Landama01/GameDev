@@ -11,12 +11,12 @@
 #include "Defs.h"
 #include "Log.h"
 
-#define initPosX 150
-#define initPosY 388
+
 
 Player::Player() : Module()
 {
 	name.Create("player");
+	Jumping = false;
 
 	position.x = initPosX;
 	position.y = initPosY;
@@ -103,38 +103,48 @@ bool Player::Update(float dt)
 {
 	if (starting == true)
 	{
-		app->render->camera.x = 0;
+		app->render->camera.x = position.x;
 		app->render->camera.y = 0;
 		starting = false;
 		goingRight = true;
 	}
 
+
 	if (GodMode)
 	{
+		
+
 		if (position.y <= -130)
 		{
 			velocity.y = 0.0f;
 			position.y += 1;
+
+
 		}
 		else velocity.y = 1.0f;
 	}		
 
 	if (goingRight)
 	{
-		currentAnimation = &RangerIdleR;
-	}		
+		if (Jumping) currentAnimation = &JumpingR;
+		else currentAnimation = &RangerIdleR;
+	}
 	else if (goingLeft)
 	{
-		currentAnimation = &RangerIdleL;
+		if(Jumping) currentAnimation = &JumpingL;
+		else currentAnimation = &RangerIdleL;
 	}
 	if (app->scene->SceneIntro == false)
 	{
+		tmpPos = position;
+
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
 		{
 			position.x -= velocity.x;
 			currentAnimation = &RunLeft;
 			goingLeft = true;
 			goingRight = false;
+			dir = Direction::LEFT;
 
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
@@ -143,63 +153,48 @@ bool Player::Update(float dt)
 			currentAnimation = &RunRight;
 			goingLeft = false;
 			goingRight = true;
-		}
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.y > -300 && GodMode)
-		{
-			position.y -= velocity.y;
+			dir = Direction::RIGHT;
 
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-			{
-				currentAnimation = &RunLeft;
-				goingLeft = true;
-				goingRight = false;
-			}
-			else
-			{
-				currentAnimation = &RunRight;
-				goingLeft = false;
-				goingRight = true;
-			}			
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.y < 530 && GodMode)
-		{
-			position.y += velocity.y;
-			
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		for (int i=0; i < numPoints;i++) 
+		{			
+			if (CheckCollision(iPoint(position.x + pointsCollision[i].x + (velocity.x * dir), position.y + pointsCollision[i].y)))
 			{
-				currentAnimation = &RunLeft;
-				goingLeft = true;
-				goingRight = false;
-			}
-			else
-			{
-				currentAnimation = &RunRight;
-				goingLeft = false;
-				goingRight = true;
-			}
-		}
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && position.y >= 530)
-		{
-			Jumping = true;
-			velocity.y = 2.0f;
+				position = tmpPos;
+				break;
+
+			}					
+
 		}
 
-		if (Jumping)
+
+		ControlsGameMode();
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN  && !Jumping)
 		{
 			Jump();
-			Jumping = false;
 		}
 
-		if (position.y < 530 && !GodMode)
+		//if (position.y < 530 && !GodMode)
+		if ( !GodMode)
 		{
-			velocity.y -= gravity;
-			position.y -= velocity.y;
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-			{
-				currentAnimation = &JumpingL;				
-			}
-			else currentAnimation = &JumpingR;
 			
+			tmpPos = position;
+			velocity.y =(velocity.y <-0.5f)? -0.5f : velocity.y-=gravity;
+			position.y -= velocity.y;
+			for (int i = 0; i < numPoints; i++)
+			{
+				if (CheckCollision(iPoint(position.x + pointsCollision[i].x , position.y + pointsCollision[i].y)))
+				{
+					position = tmpPos;
+					Jumping = false;
+					break;
+
+				}
+
+			}
+
+			
+
 		}
 		else
 		{
@@ -209,6 +204,44 @@ bool Player::Update(float dt)
 	currentAnimation->Update();
 
 	return true;
+}
+
+void Player::ControlsGameMode()
+{
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.y > -300 && GodMode)
+	{
+		position.y -= velocity.y;
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			currentAnimation = &RunLeft;
+			goingLeft = true;
+			goingRight = false;
+		}
+		else
+		{
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+		}
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.y < 530 && GodMode)
+	{
+		position.y += velocity.y;
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			currentAnimation = &RunLeft;
+			goingLeft = true;
+			goingRight = false;
+		}
+		else
+		{
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+		}
+	}
 }
 
 bool Player::PostUpdate()
@@ -224,9 +257,57 @@ bool Player::PostUpdate()
 
 void Player::Jump()
 {
-	velocity.y -= gravity;
-	position.y -= velocity.y;
+	
+	Jumping = true;
+	velocity.y = 2.0f;
+
 }
+
+
+int Player::CheckCollision(iPoint positionMap)
+{
+	
+	iPoint pos = app->map->WorldToMap(positionMap.x, positionMap.y);
+	uint typeTilePlayer = app->map->mapData.layers.At(4)->data->Get(pos.x,pos.y);
+	uint firstgidLayerCollisions = app->map->mapData.tilesets.At(2)->data->firstgid;
+	typeTilePlayer -= firstgidLayerCollisions;
+
+
+	LOG(" Cordeada Y %d  cordenada  X %d", pos.y, pos.x);
+
+	if (typeTilePlayer == 0) {
+	
+		return true;
+	}
+		switch (typeTilePlayer)
+		{
+		case VICTORY:
+			// Victory
+			if (positionMap == app->map->WorldToMap(position.x, position.y))/*win :D*/;
+				
+			return VICTORY;
+			break;
+
+		case COLLISION:
+			// Collision
+			return COLLISION;
+			break;
+
+		case CHECK_POINT:
+			// Checkpoint
+			if (positionMap == app->map->WorldToMap(position.x,position.y) )
+			return CHECK_POINT;
+			break;
+
+		default:
+			return false;
+			break;
+		}
+	
+
+	return false;
+}
+
 
 bool Player::CleanUp()
 {
