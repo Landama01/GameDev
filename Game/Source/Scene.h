@@ -33,10 +33,17 @@ public:
 	bool CleanUp();
 
 	bool SceneIntro = true;
+	bool WinningState = false;
+	bool LosingState = false;
+
+	float timer = 0;
+	float sec = 60;
 
 private:
 	SDL_Texture* background;
 	SDL_Texture* intro;
+	SDL_Texture* winScene;
+	SDL_Texture* loseScene;
 };
 
 #endif // __SCENE_H__

@@ -14,7 +14,6 @@
 #define topLimit 130
 #define botLimit 300
 
-
 Scene::Scene() : Module()
 {
 	name.Create("scene");
@@ -28,7 +27,7 @@ Scene::~Scene()
 bool Scene::Awake()
 {
 	LOG("Loading Scene");
-	bool ret = true;
+	bool ret = true;	
 
 	return ret;
 }
@@ -38,6 +37,8 @@ bool Scene::Start()
 {
 	background = app->tex->Load("Assets/textures/Background.png");
 	intro = app->tex->Load("Assets/textures/SceneIntro.png");
+	winScene = app->tex->Load("Assets/textures/WinScene.png");
+	loseScene = app->tex->Load("Assets/textures/LoseScene.png");
 
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
@@ -58,7 +59,8 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (SceneIntro == false)
+	
+	if (SceneIntro == false && WinningState == false && LosingState == false)
 	{
 		//DEBUG KEYS
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
@@ -108,6 +110,12 @@ bool Scene::Update(float dt)
 	if (app->render->camera.y <= topLimit)
 		app->render->camera.y = topLimit;
 
+	if (app->player->position.x >= 3100 && WinningState == false)
+		WinningState = true;
+
+	if (app->player->position.y >= 600 && LosingState == false)
+		LosingState = true;	
+
 	// Draw map
 	app->map->Draw();
 	
@@ -133,10 +141,53 @@ bool Scene::PostUpdate()
 		app->render->DrawTexture(intro, 0, -topLimit);
 	}
 
+	if (WinningState == true && SceneIntro == false)
+	{
+		if (timer <= 6 * sec)
+		{
+			//Initial positions
+			app->render->camera.x = 0;
+			app->render->camera.y = 0;
+			app->player->position.x = initPosX;
+			app->player->position.y = initPosY;
+			app->render->DrawTexture(winScene, 0, 0);
+			timer++;
+		}
+		else
+		{
+			WinningState = false;
+			timer = 0;
+			app->player->GodMode = false;
+			SceneIntro = true;
+		}			
+	}
+
+	if (LosingState == true && SceneIntro == false)
+	{
+		if (timer <= 6 * sec)
+		{
+			//Initial positions
+			app->render->camera.x = 0;
+			app->render->camera.y = 0;
+			app->player->position.x = initPosX;
+			app->player->position.y = initPosY;
+			app->render->DrawTexture(loseScene, 0, 0);
+			timer++;
+		}
+		else
+		{
+			LosingState = false;
+			timer = 0;
+			app->player->GodMode = false;
+			SceneIntro = true;
+		}
+	}
+		
+
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
-	if (app->input->GetKey(SDL_SCANCODE_SPACE))
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && SceneIntro == true)
 		SceneIntro = false;
 
 	return ret;
@@ -149,6 +200,8 @@ bool Scene::CleanUp()
 
 	app->tex->UnLoad(background);
 	app->tex->UnLoad(intro);
+	app->tex->UnLoad(winScene);
+	app->tex->UnLoad(loseScene);
 
 	return true;
 }

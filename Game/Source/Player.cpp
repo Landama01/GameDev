@@ -72,6 +72,7 @@ Player::Player() : Module()
 	JumpingR.PushBack({497, 330, 58, 78});
 	//JumpingR.PushBack({599, 330, 48, 78});
 	//JumpingR.PushBack({695, 330, 52, 78});
+	JumpingR.loop = false;
 	JumpingR.speed = 0.02f;
 
 	JumpingL.PushBack({ 600, 420, 52, 78 });
@@ -246,7 +247,7 @@ void Player::ControlsGameMode()
 
 bool Player::PostUpdate()
 {
-	if (app->scene->SceneIntro == false)
+	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false)
 	{
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 		app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
