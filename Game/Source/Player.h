@@ -12,13 +12,12 @@ enum TypeCollision {
 	CHECK_POINT = 2,
 	AIR,
 };
-
-
 enum Direction {
 
 	RIGHT=1,
 	LEFT=-1,
 };
+
 class Player : public Module
 {
 
@@ -39,6 +38,8 @@ public:
 	bool Update(float dt);
 
 	void ControlsGameMode();
+
+	void ControlsForGodMode();
 
 	// Called before all Updates
 	bool PostUpdate();

@@ -35,7 +35,7 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	background = app->tex->Load("Assets/textures/Background.png");
+	background = app->tex->Load("Assets/textures/Background2.png");
 	intro = app->tex->Load("Assets/textures/SceneIntro.png");
 	winScene = app->tex->Load("Assets/textures/WinScene.png");
 	loseScene = app->tex->Load("Assets/textures/LoseScene.png");
@@ -80,19 +80,20 @@ bool Scene::Update(float dt)
 			app->player->GodMode = true;			
 		else if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN && app->player->GodMode == true)
 			app->player->GodMode = false;			
-
+				
+		MidCamPos = -(app->render->camera.x - (1280 / 2));
 
 		//LINKED CAMERA TO PLAYER
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && app->player->position.y <= topLimit + 200)
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && app->player->position.y <= topLimit + 200 && !app->player->GodMode)
 			app->render->camera.y += app->player->velocity.y;
 
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && app->player->position.y > 0)
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && app->player->position.y > 0 && !app->player->GodMode)
 			app->render->camera.y -= app->player->velocity.y;
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2)
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2 && app->player->position.x <= MidCamPos)
 			app->render->camera.x += app->player->velocity.x;
 
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2)
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2 && app->player->position.x >= MidCamPos)
 			app->render->camera.x -= app->player->velocity.x;
 
 		//set camera limits
@@ -116,6 +117,7 @@ bool Scene::Update(float dt)
 	if (app->player->position.y >= 600 && LosingState == false)
 		LosingState = true;	
 
+	app->render->DrawTexture(background, 0, -topLimit);
 	// Draw map
 	app->map->Draw();
 	
@@ -133,9 +135,8 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
-	bool ret = true;
+	bool ret = true;	
 	
-	//app->render->DrawTexture(background, 0, -topLimit);
 	if (SceneIntro == true)
 	{
 		app->render->DrawTexture(intro, 0, -topLimit);

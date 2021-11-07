@@ -36,6 +36,8 @@ public:
 	bool WinningState = false;
 	bool LosingState = false;
 
+	float MidCamPos;
+
 	float timer = 0;
 	float sec = 60;
 

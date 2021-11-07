@@ -79,6 +79,7 @@ Player::Player() : Module()
 	JumpingL.PushBack({ 500, 420, 58, 78 });
 	JumpingL.PushBack({ 309, 420, 58, 78 });
 	JumpingL.PushBack({ 213, 420, 58, 78 });
+	JumpingL.loop = false;
 	JumpingL.speed = 0.02f;
 }
 
@@ -119,8 +120,6 @@ bool Player::Update(float dt)
 		{
 			velocity.y = 0.0f;
 			position.y += 1;
-
-
 		}
 		else velocity.y = 1.0f;
 	}		
@@ -135,14 +134,15 @@ bool Player::Update(float dt)
 		if(Jumping) currentAnimation = &JumpingL;
 		else currentAnimation = &RangerIdleL;
 	}
-	if (app->scene->SceneIntro == false)
+	if (app->scene->SceneIntro == false && GodMode == false)
 	{
 		tmpPos = position;
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
 		{
 			position.x -= velocity.x;
-			currentAnimation = &RunLeft;
+			if (velocity.y == 0)
+				currentAnimation = &RunLeft;
 			goingLeft = true;
 			goingRight = false;
 			dir = Direction::LEFT;
@@ -151,7 +151,8 @@ bool Player::Update(float dt)
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
 		{
 			position.x += velocity.x;
-			currentAnimation = &RunRight;
+			if(velocity.y == 0)
+				currentAnimation = &RunRight;
 			goingLeft = false;
 			goingRight = true;
 			dir = Direction::RIGHT;
@@ -202,6 +203,10 @@ bool Player::Update(float dt)
 			velocity.y = 0;
 		}
 	}
+	if (GodMode)
+	{
+		ControlsForGodMode();
+	}
 	currentAnimation->Update();
 
 	return true;
@@ -242,6 +247,35 @@ void Player::ControlsGameMode()
 			goingLeft = false;
 			goingRight = true;
 		}
+	}
+}
+
+void Player::ControlsForGodMode()
+{
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
+	{
+		position.x -= velocity.x;
+		currentAnimation = &RunLeft;
+		goingLeft = true;
+		goingRight = false;
+
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
+	{
+		position.x += velocity.x;
+		currentAnimation = &RunRight;
+		goingLeft = false;
+		goingRight = true;
+
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.y >= -130)
+	{
+		position.y -= velocity.y;
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.y <= 528)
+	{
+		position.y += velocity.y;
 	}
 }
 
