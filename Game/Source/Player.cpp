@@ -138,21 +138,35 @@ bool Player::Update(float dt)
 	{
 		tmpPos = position;
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping)
 		{
 			position.x -= velocity.x;
-			if (velocity.y == 0)
-				currentAnimation = &RunLeft;
+			currentAnimation = &RunLeft;
 			goingLeft = true;
 			goingRight = false;
 			dir = Direction::LEFT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping)
+		{
+			position.x -= velocity.x;
+			goingLeft = true;
+			goingRight = false;
+			dir = Direction::LEFT;
+
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping)
 		{
 			position.x += velocity.x;
-			if(velocity.y == 0)
-				currentAnimation = &RunRight;
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+			dir = Direction::RIGHT;
+
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping)
+		{
+			position.x += velocity.x;
 			goingLeft = false;
 			goingRight = true;
 			dir = Direction::RIGHT;

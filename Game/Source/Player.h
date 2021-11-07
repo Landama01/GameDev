@@ -56,8 +56,8 @@ public:
 	bool goingRight = false;
 	bool Jumping = false;
 
-	static const int numPoints = 6;
-	iPoint pointsCollision[numPoints] = { { 0,0 },{45 , 0},{ 45,26 },{45 ,54 }, {0, 54},{0, 26} };
+	static const int numPoints = 8;
+	iPoint pointsCollision[numPoints] = { { 0,0 },{50 , 0},{ 50,31 },{50 ,62 }, {0, 62},{0, 31} ,{25,0 } ,{25,62} };
 
 	Direction dir = Direction::RIGHT;
 	bool GodMode = false;
