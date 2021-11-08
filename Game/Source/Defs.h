@@ -11,8 +11,8 @@
 #define NULL  0
 
 
-#define initPosX 150
-#define initPosY 288
+#define initPosX 120
+#define initPosY 200
 
 
 // Deletes a buffer

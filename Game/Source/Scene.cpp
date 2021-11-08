@@ -67,7 +67,8 @@ bool Scene::Update(float dt)
 		{
 			app->player->position.x = initPosX;
 			app->player->position.y = initPosY;
-
+			app->player->goingRight = true;
+			app->player->Jumping = true;
 			app->render->camera.x = 0;
 			app->render->camera.y = 0;
 		}

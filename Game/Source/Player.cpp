@@ -16,7 +16,7 @@
 Player::Player() : Module()
 {
 	name.Create("player");
-	Jumping = false;
+	Jumping = true;
 
 	position.x = initPosX;
 	position.y = initPosY;
@@ -122,18 +122,35 @@ bool Player::Update(float dt)
 			position.y += 1;
 		}
 		else velocity.y = 1.0f;
-	}		
+	}	
 
 	if (goingRight)
 	{
-		if (Jumping) currentAnimation = &JumpingR;
+		if (Jumping)
+		{
+			currentAnimation = &JumpingR;
+		}
 		else currentAnimation = &RangerIdleR;
 	}
 	else if (goingLeft)
 	{
-		if(Jumping) currentAnimation = &JumpingL;
+		if (Jumping)
+		{
+			currentAnimation = &JumpingL;
+		}
 		else currentAnimation = &RangerIdleL;
 	}
+
+	if (JumpingR.HasFinished() && !Jumping || !Jumping)
+	{
+		JumpingR.Reset();
+	}
+	if (JumpingL.HasFinished() && !Jumping || !Jumping)
+	{
+		JumpingL.Reset();
+	}
+
+
 	if (app->scene->SceneIntro == false && GodMode == false)
 	{
 		tmpPos = position;
@@ -195,20 +212,21 @@ bool Player::Update(float dt)
 		{
 			
 			tmpPos = position;
-			velocity.y =(velocity.y <-0.5f)? -0.5f : velocity.y-=gravity;
+			velocity.y -=gravity;
 			position.y -= velocity.y;
 			for (int i = 0; i < numPoints; i++)
 			{
+
 				if (CheckCollision(iPoint(position.x + pointsCollision[i].x , position.y + pointsCollision[i].y)))
 				{
 					position = tmpPos;
+					velocity.y = 0;
 					Jumping = false;
 					break;
 
 				}
 
-			}
-
+			}					
 			
 
 		}
@@ -306,10 +324,8 @@ bool Player::PostUpdate()
 
 void Player::Jump()
 {
-	
 	Jumping = true;
-	velocity.y = 2.0f;
-
+	velocity.y = 2.0f;	
 }
 
 
@@ -322,7 +338,7 @@ int Player::CheckCollision(iPoint positionMap)
 	typeTilePlayer -= firstgidLayerCollisions;
 
 
-	LOG(" Cordeada Y %d  cordenada  X %d", pos.y, pos.x);
+	LOG(" Cordenada Y %d  cordenada  X %d", pos.y, pos.x);
 
 	if (typeTilePlayer == 0) {
 	
