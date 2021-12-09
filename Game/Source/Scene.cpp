@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Player.h"
+#include "Enemy.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -86,16 +87,16 @@ bool Scene::Update(float dt)
 
 		//LINKED CAMERA TO PLAYER
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && app->player->position.y <= topLimit + 200 && !app->player->GodMode)
-			app->render->camera.y += app->player->velocity.y;
+			app->render->camera.y += app->player->velocity.y * dt;
 
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && app->player->position.y > 0 && !app->player->GodMode)
-			app->render->camera.y -= app->player->velocity.y;
+			app->render->camera.y -= app->player->velocity.y * dt;
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2 && app->player->position.x <= MidCamPos)
-			app->render->camera.x += app->player->velocity.x;
+			app->render->camera.x += app->player->velocity.x * dt;
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2 && app->player->position.x >= MidCamPos)
-			app->render->camera.x -= app->player->velocity.x;
+			app->render->camera.x -= app->player->velocity.x * dt;
 
 		//set camera limits
 	}
@@ -118,6 +119,12 @@ bool Scene::Update(float dt)
 	if (app->player->position.y >= 600 && LosingState == false)
 		LosingState = true;	
 
+	if (app->player->position.y <= app->enemy->position.y)
+	{
+		if (app->player->position.x <= app->enemy->position.x && app->player->position.x + 35 > app->enemy->position.x)
+			LosingState = true;
+	}	
+
 	app->render->DrawTexture(background, 0, -topLimit);
 	// Draw map
 	app->map->Draw();
@@ -130,6 +137,48 @@ bool Scene::Update(float dt)
 
 	app->win->SetTitle(title.GetString());*/
 	
+	if (WinningState == true && SceneIntro == false)
+	{
+		if (timer <= 2 * sec)
+		{
+			//Initial positions
+			app->render->camera.x = 0;
+			app->render->camera.y = 0;
+			app->player->position.x = initPosX;
+			app->player->position.y = initPosY;
+			app->render->DrawTexture(winScene, 0, 0);
+			timer++ * dt;
+		}
+		else
+		{
+			WinningState = false;
+			timer = 0;
+			app->player->GodMode = false;
+			SceneIntro = true;
+		}
+	}
+
+	if (LosingState == true && SceneIntro == false)
+	{
+		if (timer <= 2 * sec)
+		{
+			//Initial positions
+			app->render->camera.x = 0;
+			app->render->camera.y = 0;
+			app->player->position.x = initPosX;
+			app->player->position.y = initPosY;
+			app->render->DrawTexture(loseScene, 0, 0);
+			timer++ * dt;
+		}
+		else
+		{
+			LosingState = false;
+			timer = 0;
+			app->player->GodMode = false;
+			SceneIntro = true;
+		}
+	}
+
 	return true;
 }
 
@@ -141,50 +190,7 @@ bool Scene::PostUpdate()
 	if (SceneIntro == true)
 	{
 		app->render->DrawTexture(intro, 0, -topLimit);
-	}
-
-	if (WinningState == true && SceneIntro == false)
-	{
-		if (timer <= 6 * sec)
-		{
-			//Initial positions
-			app->render->camera.x = 0;
-			app->render->camera.y = 0;
-			app->player->position.x = initPosX;
-			app->player->position.y = initPosY;
-			app->render->DrawTexture(winScene, 0, 0);
-			timer++;
-		}
-		else
-		{
-			WinningState = false;
-			timer = 0;
-			app->player->GodMode = false;
-			SceneIntro = true;
-		}			
-	}
-
-	if (LosingState == true && SceneIntro == false)
-	{
-		if (timer <= 6 * sec)
-		{
-			//Initial positions
-			app->render->camera.x = 0;
-			app->render->camera.y = 0;
-			app->player->position.x = initPosX;
-			app->player->position.y = initPosY;
-			app->render->DrawTexture(loseScene, 0, 0);
-			timer++;
-		}
-		else
-		{
-			LosingState = false;
-			timer = 0;
-			app->player->GodMode = false;
-			SceneIntro = true;
-		}
-	}
-		
+	}		
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;

@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Map.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Scene.h"
 
 #include "Defs.h"
@@ -22,7 +23,7 @@ Player::Player() : Module()
 	position.y = initPosY;
 
 	velocity.y = 0.0f;
-	velocity.x = 1.0f;
+	velocity.x = 0.5f;
 
 	//size X2
 	RangerIdleR.PushBack({ 120,9,50,62 });
@@ -121,7 +122,7 @@ bool Player::Update(float dt)
 			velocity.y = 0.0f;
 			position.y += 1;
 		}
-		else velocity.y = 1.0f;
+		else velocity.y = 0.5f;
 	}	
 
 	if (goingRight)
@@ -157,7 +158,7 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping)
 		{
-			position.x -= velocity.x;
+			position.x -= velocity.x * dt;
 			currentAnimation = &RunLeft;
 			goingLeft = true;
 			goingRight = false;
@@ -166,7 +167,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping)
 		{
-			position.x -= velocity.x;
+			position.x -= velocity.x * dt;
 			goingLeft = true;
 			goingRight = false;
 			dir = Direction::LEFT;
@@ -174,7 +175,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping)
 		{
-			position.x += velocity.x;
+			position.x += velocity.x * dt;
 			currentAnimation = &RunRight;
 			goingLeft = false;
 			goingRight = true;
@@ -183,7 +184,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping)
 		{
-			position.x += velocity.x;
+			position.x += velocity.x * dt;
 			goingLeft = false;
 			goingRight = true;
 			dir = Direction::RIGHT;
@@ -195,13 +196,11 @@ bool Player::Update(float dt)
 			{
 				position = tmpPos;
 				break;
-
-			}					
-
+			}				
 		}
 
-
 		ControlsGameMode();
+
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN  && !Jumping)
 		{
 			Jump();
@@ -212,8 +211,8 @@ bool Player::Update(float dt)
 		{
 			
 			tmpPos = position;
-			velocity.y -=gravity;
-			position.y -= velocity.y;
+			velocity.y -=gravity * dt;
+			position.y -= velocity.y * dt;
 			for (int i = 0; i < numPoints; i++)
 			{
 
@@ -325,7 +324,7 @@ bool Player::PostUpdate()
 void Player::Jump()
 {
 	Jumping = true;
-	velocity.y = 2.0f;	
+	velocity.y = 2.5f;	
 }
 
 

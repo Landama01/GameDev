@@ -20,6 +20,7 @@ class Audio;
 class Scene;
 class Map;
 class Player;
+class Enemy;
 
 class App
 {
@@ -92,6 +93,7 @@ public:
 	Scene* scene;
 	Map* map;
 	Player* player;
+	Enemy* enemy;
 
 private:
 
