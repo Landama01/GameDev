@@ -4,6 +4,7 @@
   <app>
     <title>Game Development Testbed</title>
     <organization>UPC</organization>
+    <frameCap value="16"/>
   </app>
 
   <renderer>

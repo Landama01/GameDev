@@ -2,6 +2,8 @@
 #define __APP_H__
 
 #include "Module.h"
+#include "PerfTimer.h"
+#include "Timer.h"
 #include "List.h"
 
 #include "PugiXml/src/pugixml.hpp"
@@ -97,6 +99,7 @@ private:
 	char** args;
 	SString title;
 	SString organization;
+	int frameCap;
 
 	List<Module *> modules;
 
@@ -107,10 +110,23 @@ private:
 	//pugi::xml_node configApp;
 
 	uint frames;
-	float dt;
 
 	mutable bool saveGameRequested;
 	bool loadGameRequested;
+
+	PerfTimer ptimer;
+	PerfTimer* frameDuration;
+
+	Timer startupTime;
+	Timer frameTime;
+	Timer lastSecFrameTime;
+
+	uint64 frameCount = 0;
+	uint32 framesPerSecond = 0;
+	uint32 lastSecFrameCount = 0;
+
+	float averageFps = 0.0f;
+	float dt = 0.0f;
 };
 
 extern App* app;
