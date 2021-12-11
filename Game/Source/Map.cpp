@@ -304,7 +304,7 @@ bool Map::LoadTileSets(pugi::xml_node mapFile) {
 		TileSet* set = new TileSet();
 		if (ret == true) ret = LoadTilesetDetails(tileset, set);
 		if (ret == true) ret = LoadTilesetImage(tileset, set);
-		mapData.tilesets.add(set);
+		mapData.tilesets.Add(set);
 	}
 
 	return ret;
@@ -388,7 +388,7 @@ bool Map::LoadAllLayers(pugi::xml_node mapNode) {
 		ret = LoadLayer(layerNode, mapLayer);
 
 		//add the layer to the map
-		mapData.layers.add(mapLayer);
+		mapData.layers.Add(mapLayer);
 	}
 
 	return ret;
@@ -405,7 +405,7 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 		p->name = propertieNode.attribute("name").as_string();
 		p->value = propertieNode.attribute("value").as_int();
 
-		properties.list.add(p);
+		properties.list.Add(p);
 	}
 	
 	return ret;

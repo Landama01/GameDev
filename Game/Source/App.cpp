@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Textures.h"
+#include "Pathfinding.h"
 #include "Audio.h"
 #include "Scene.h"
 #include "Map.h"
@@ -25,6 +26,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
+	pathfinding = new PathFinding();
 	map = new Map();
 	scene = new Scene();	
 	player = new Player();
@@ -36,6 +38,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(input);
 	AddModule(tex);
 	AddModule(audio);
+	AddModule(pathfinding);
 	AddModule(scene);
 	AddModule(map);
 	AddModule(player);
@@ -63,7 +66,7 @@ App::~App()
 void App::AddModule(Module* module)
 {
 	module->Init();
-	modules.add(module);
+	modules.Add(module);
 }
 
 // Called before render is available

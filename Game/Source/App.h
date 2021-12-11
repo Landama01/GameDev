@@ -21,6 +21,7 @@ class Scene;
 class Map;
 class Player;
 class Enemy;
+class PathFinding;
 
 class App
 {
@@ -90,6 +91,7 @@ public:
 	Render* render;
 	Textures* tex;
 	Audio* audio;
+	PathFinding* pathfinding;
 	Scene* scene;
 	Map* map;
 	Player* player;

@@ -51,13 +51,13 @@ public:
 	}
 
 	// Get Size
-	unsigned int count() const
+	unsigned int Count() const
 	{
 		return size;
 	}
 
 	// Add new item
-	ListItem<tdata>* add(const tdata& item)
+	ListItem<tdata>* Add(const tdata& item)
 	{
 		ListItem<tdata>* dataItem;
 		dataItem = new ListItem<tdata>(item);
@@ -78,7 +78,7 @@ public:
 	}
 
 	// Deletes an item from the list
-	bool del(ListItem<tdata>* item)
+	bool Del(ListItem<tdata>* item)
 	{
 		if(item == NULL)
 		{
@@ -192,7 +192,7 @@ public:
 
 		while(p_item != NULL)
 		{
-			add(p_item->data);
+			Add(p_item->data);
 			p_item = p_item->next;
 		}
 
