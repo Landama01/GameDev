@@ -22,7 +22,7 @@ Enemy::Enemy() : Module()
 	position.y = 235;
 
 	velocity.y = 0.0f;
-	velocity.x = 0.2f;
+	velocity.x = 1.5f;
 
 	//Set anims
 	RangerIdleR.PushBack({ 120,9,50,62 });
@@ -31,7 +31,7 @@ Enemy::Enemy() : Module()
 	RangerIdleR.PushBack({ 408,11,60,62 });
 	RangerIdleR.PushBack({ 504,11,48,62 });
 	RangerIdleR.PushBack({ 600,11,48,62 });
-	RangerIdleR.speed = 0.022f;
+	RangerIdleR.speed = 0.044f;
 
 	RunRight.PushBack({ 24,171,50,62 });
 	RunRight.PushBack({ 119,167,46,62 });
@@ -41,7 +41,7 @@ Enemy::Enemy() : Module()
 	RunRight.PushBack({ 503,167,50,62 });
 	RunRight.PushBack({ 599,165,50,62 });
 	RunRight.PushBack({ 695,169,50,62 });
-	RunRight.speed = 0.03f;
+	RunRight.speed = 0.06f;
 
 	RunLeft.PushBack({ 695,255,50,62 });
 	RunLeft.PushBack({ 603,251,46,62 });
@@ -51,7 +51,7 @@ Enemy::Enemy() : Module()
 	RunLeft.PushBack({ 215,251,50,62 });
 	RunLeft.PushBack({ 119,249,50,62 });
 	RunLeft.PushBack({ 23,253,50,62 });
-	RunLeft.speed = 0.03f;
+	RunLeft.speed = 0.06f;
 
 }
 
@@ -101,12 +101,12 @@ bool Enemy::Update(float dt)
 
 	if (goingRight == true)
 	{
-		position.x += velocity.x * dt;
+		position.x += velocity.x;
 		currentAnimation = &RunRight;
 	}
 	if (goingLeft == true)
 	{
-		position.x -= velocity.x * dt;
+		position.x -= velocity.x;
 		currentAnimation = &RunLeft;
 	}
 
@@ -126,8 +126,8 @@ bool Enemy::Update(float dt)
 	}
 
 	tmpPos = position;
-	velocity.y -= gravity*dt;
-	position.y -= velocity.y*dt;
+	velocity.y -= gravity;
+	position.y -= velocity.y;
 	for (int i = 0; i < numPoints; i++)
 	{
 

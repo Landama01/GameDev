@@ -87,16 +87,16 @@ bool Scene::Update(float dt)
 
 		//LINKED CAMERA TO PLAYER
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && app->player->position.y <= topLimit + 200 && !app->player->GodMode)
-			app->render->camera.y += app->player->velocity.y * dt;
+			app->render->camera.y += app->player->velocity.y;
 
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && app->player->position.y > 0 && !app->player->GodMode)
-			app->render->camera.y -= app->player->velocity.y * dt;
+			app->render->camera.y -= app->player->velocity.y;
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2 && app->player->position.x <= MidCamPos)
-			app->render->camera.x += app->player->velocity.x * dt;
+			app->render->camera.x += app->player->velocity.x;
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2 && app->player->position.x >= MidCamPos)
-			app->render->camera.x -= app->player->velocity.x * dt;
+			app->render->camera.x -= app->player->velocity.x;
 
 		//set camera limits
 	}

@@ -23,7 +23,7 @@ Player::Player() : Module()
 	position.y = initPosY;
 
 	velocity.y = 0.0f;
-	velocity.x = 0.5f;
+	velocity.x = 1.5f;
 
 	//size X2
 	RangerIdleR.PushBack({ 120,9,50,62 });
@@ -32,7 +32,7 @@ Player::Player() : Module()
 	RangerIdleR.PushBack({ 408,11,60,62 });
 	RangerIdleR.PushBack({ 504,11,48,62 });
 	RangerIdleR.PushBack({ 600,11,48,62 });
-	RangerIdleR.speed = 0.022f;
+	RangerIdleR.speed = 0.088f;
 
 
 	RangerIdleL.PushBack({ 598,87,50,62 });
@@ -41,7 +41,7 @@ Player::Player() : Module()
 	RangerIdleL.PushBack({ 308,89,60,62 });
 	RangerIdleL.PushBack({ 214,89,48,62 });
 	RangerIdleL.PushBack({ 120,89,48,62 });
-	RangerIdleL.speed = 0.022f;	
+	RangerIdleL.speed = 0.088f;	
 	
 
 	RunRight.PushBack({ 24,171,50,62 });
@@ -52,7 +52,7 @@ Player::Player() : Module()
 	RunRight.PushBack({ 503,167,50,62 });
 	RunRight.PushBack({ 599,165,50,62 });
 	RunRight.PushBack({ 695,169,50,62 });
-	RunRight.speed = 0.03f;
+	RunRight.speed = 0.12f;
 
 
 	RunLeft.PushBack({ 695,255,50,62 });
@@ -63,7 +63,7 @@ Player::Player() : Module()
 	RunLeft.PushBack({ 215,251,50,62 });
 	RunLeft.PushBack({ 119,249,50,62 });
 	RunLeft.PushBack({ 23,253,50,62 });
-	RunLeft.speed = 0.03f;	
+	RunLeft.speed = 0.12f;	
 
 	//JumpingR.PushBack({21, 330, 50, 78});
 	JumpingR.PushBack({117, 330, 52, 78});
@@ -74,14 +74,14 @@ Player::Player() : Module()
 	//JumpingR.PushBack({599, 330, 48, 78});
 	//JumpingR.PushBack({695, 330, 52, 78});
 	JumpingR.loop = false;
-	JumpingR.speed = 0.02f;
+	JumpingR.speed = 0.06f;
 
 	JumpingL.PushBack({ 600, 420, 52, 78 });
 	JumpingL.PushBack({ 500, 420, 58, 78 });
 	JumpingL.PushBack({ 309, 420, 58, 78 });
 	JumpingL.PushBack({ 213, 420, 58, 78 });
 	JumpingL.loop = false;
-	JumpingL.speed = 0.02f;
+	JumpingL.speed = 0.06f;
 }
 
 Player::~Player()
@@ -158,7 +158,7 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping)
 		{
-			position.x -= velocity.x * dt;
+			position.x -= velocity.x;
 			currentAnimation = &RunLeft;
 			goingLeft = true;
 			goingRight = false;
@@ -167,7 +167,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping)
 		{
-			position.x -= velocity.x * dt;
+			position.x -= velocity.x ;
 			goingLeft = true;
 			goingRight = false;
 			dir = Direction::LEFT;
@@ -175,7 +175,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping)
 		{
-			position.x += velocity.x * dt;
+			position.x += velocity.x;
 			currentAnimation = &RunRight;
 			goingLeft = false;
 			goingRight = true;
@@ -184,7 +184,7 @@ bool Player::Update(float dt)
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping)
 		{
-			position.x += velocity.x * dt;
+			position.x += velocity.x;
 			goingLeft = false;
 			goingRight = true;
 			dir = Direction::RIGHT;
@@ -211,8 +211,8 @@ bool Player::Update(float dt)
 		{
 			
 			tmpPos = position;
-			velocity.y -=gravity * dt;
-			position.y -= velocity.y * dt;
+			velocity.y -=gravity;
+			position.y -= velocity.y;
 			for (int i = 0; i < numPoints; i++)
 			{
 
@@ -324,7 +324,7 @@ bool Player::PostUpdate()
 void Player::Jump()
 {
 	Jumping = true;
-	velocity.y = 2.5f;	
+	velocity.y = 2.0f;	
 }
 
 
