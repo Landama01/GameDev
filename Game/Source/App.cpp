@@ -200,8 +200,7 @@ void App::FinishUpdate()
 	}
 
 	static char title[256];
-	sprintf_s(title, 256, "Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %I64u ",
-		averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
+	sprintf_s(title, 256, "Last Archer Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %I64u Active coins: 3",averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
 
 	// L08: TODO 2: Use SDL_Delay to make sure you get your capped framerate
 	float delay = float(frameCap) - frameDuration->ReadMs();
