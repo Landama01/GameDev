@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Coins.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -31,6 +32,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	scene = new Scene();	
 	player = new Player();
 	enemy = new Enemy();
+	coin = new Coins();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -43,6 +45,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map);
 	AddModule(player);
 	AddModule(enemy);
+	AddModule(coin);
 
 	// Render last to swap buffer
 	AddModule(render);

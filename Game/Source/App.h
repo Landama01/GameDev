@@ -22,6 +22,7 @@ class Map;
 class Player;
 class Enemy;
 class PathFinding;
+class Coins;
 
 class App
 {
@@ -96,6 +97,7 @@ public:
 	Map* map;
 	Player* player;
 	Enemy* enemy;
+	Coins* coin;
 
 private:
 

@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Coins.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -117,13 +118,13 @@ bool Scene::Update(float dt)
 		WinningState = true;
 
 	if (app->player->position.y >= 600 && LosingState == false)
-		LosingState = true;	
+		LosingState = true;
 
-	if (app->player->position.y <= app->enemy->position.y)
+	/*if (app->player->position.y <= app->enemy->position.y)
 	{
 		if (app->player->position.x <= app->enemy->position.x && app->player->position.x + 35 > app->enemy->position.x)
 			LosingState = true;
-	}	
+	}*/	
 
 	app->render->DrawTexture(background, 0, -topLimit);
 	// Draw map
@@ -146,6 +147,7 @@ bool Scene::Update(float dt)
 			app->render->camera.y = 0;
 			app->player->position.x = initPosX;
 			app->player->position.y = initPosY;
+			app->coin->active = false;
 			app->render->DrawTexture(winScene, 0, 0);
 			timer++ * dt;
 		}
@@ -154,6 +156,7 @@ bool Scene::Update(float dt)
 			WinningState = false;
 			timer = 0;
 			app->player->GodMode = false;
+			app->coin->active = false;
 			SceneIntro = true;
 		}
 	}
@@ -168,6 +171,7 @@ bool Scene::Update(float dt)
 			app->player->position.x = initPosX;
 			app->player->position.y = initPosY;
 			app->render->DrawTexture(loseScene, 0, 0);
+			app->coin->active = false;
 			timer++ * dt;
 		}
 		else
@@ -175,6 +179,7 @@ bool Scene::Update(float dt)
 			LosingState = false;
 			timer = 0;
 			app->player->GodMode = false;
+			app->coin->active = false;
 			SceneIntro = true;
 		}
 	}
@@ -195,8 +200,11 @@ bool Scene::PostUpdate()
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && SceneIntro == true)
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && SceneIntro == true) 
+	{
 		SceneIntro = false;
+		app->coin->active = true;
+	}
 
 	return ret;
 }

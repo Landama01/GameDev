@@ -4,11 +4,14 @@
 	<input />
 	<textures />
 	<audio />
+	<pathfinding />
 	<scene />
 	<map />
 	<player />
+	<enemy />
+	<coin />
 	<renderer>
 		<camera x="0" y="130" />
-		<PlayerPos x="393" y="385.999878" />
+		<PlayerPos x="120" y="385.999878" />
 	</renderer>
 </save_state>

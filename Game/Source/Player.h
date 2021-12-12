@@ -55,9 +55,11 @@ public:
 	bool goingLeft = false;
 	bool goingRight = false;
 	bool Jumping = false;
+	int coinCounter;
 
 	static const int numPoints = 8;
 	iPoint pointsCollision[numPoints] = { { 0,0 },{50 , 0},{ 50,31 },{50 ,62 }, {0, 62},{0, 31} ,{25,0 } ,{25,62} };
+	iPoint pointsCollisionBase[4] = { { 0,0 },{50 , 0},{50 ,62 }, {0, 62} };
 
 	Direction dir = Direction::RIGHT;
 	bool GodMode = false;
