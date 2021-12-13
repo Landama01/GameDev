@@ -64,7 +64,7 @@ public:
 	Direction dir = Direction::RIGHT;
 	bool GodMode = false;
 
-	float gravity = 0.02f;
+	float gravity = 0.01f;
 
 	fPoint velocity;
 	fPoint position;

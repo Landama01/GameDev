@@ -94,10 +94,10 @@ bool Scene::Update(float dt)
 			app->render->camera.y -= app->player->velocity.y;
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2 && app->player->position.x <= MidCamPos)
-			app->render->camera.x += app->player->velocity.x;
+			app->render->camera.x += app->player->velocity.x*dt;
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2 && app->player->position.x >= MidCamPos)
-			app->render->camera.x -= app->player->velocity.x;
+			app->render->camera.x -= app->player->velocity.x*dt;
 
 		//set camera limits
 	}

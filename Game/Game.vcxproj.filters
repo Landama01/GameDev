@@ -64,6 +64,7 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\Pathfinding.h" />
     <ClInclude Include="Source\Coins.h" />
+    <ClInclude Include="Source\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

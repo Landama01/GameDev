@@ -107,6 +107,7 @@
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\Coins.h" />
     <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Pathfinding.h" />
     <ClInclude Include="Source\PerfTimer.h" />
