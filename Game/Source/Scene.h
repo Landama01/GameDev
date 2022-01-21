@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "GuiButton.h"
 
 struct SDL_Texture;
 
@@ -29,6 +30,8 @@ public:
 	// Called before all Updates
 	bool PostUpdate();
 
+	bool OnGuiMouseClickEvent(GuiControl* control);
+
 	// Called before quitting
 	bool CleanUp();
 
@@ -42,6 +45,8 @@ public:
 	float sec = 60;
 
 private:
+	GuiButton* playButton;
+
 	SDL_Texture* background;
 	SDL_Texture* intro;
 	SDL_Texture* winScene;

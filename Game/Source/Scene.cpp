@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Coins.h"
+#include "GuiManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -46,6 +47,9 @@ bool Scene::Start()
 	//app->map->Load("hello.tmx");
 	app->map->Load("tilesetX2.tmx");
 	
+	//GuiControls
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { 1280/2 - 300, 1280 / 10, 160, 40 }, this);
+
 	// Load music
 	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
 
@@ -64,6 +68,7 @@ bool Scene::Update(float dt)
 	
 	if (SceneIntro == false && WinningState == false && LosingState == false)
 	{
+
 		//DEBUG KEYS
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 		{
@@ -129,7 +134,15 @@ bool Scene::Update(float dt)
 	app->render->DrawTexture(background, 0, -topLimit);
 	// Draw map
 	app->map->Draw();
-	
+		
+	if (SceneIntro == true)
+	{
+		app->render->DrawTexture(intro, 0, -topLimit);
+	}
+
+	//Draw GUI
+	app->guiManager->Draw();
+
 	// L03: DONE 7: Set the window title with map/tileset info
 	/*SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
 		app->map->mapData.width, app->map->mapData.height,
@@ -190,12 +203,7 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
-	bool ret = true;	
-	
-	if (SceneIntro == true)
-	{
-		app->render->DrawTexture(intro, 0, -topLimit);
-	}		
+	bool ret = true;		
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
@@ -207,6 +215,31 @@ bool Scene::PostUpdate()
 	}
 
 	return ret;
+}
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+
+	switch (control->type)
+	{
+	case GuiControlType::BUTTON:
+	{
+		//Checks the GUI element ID
+		if (control->id == 1)
+		{
+			LOG("Click on button 1");
+		}
+		if (control->id == 2)
+		{
+			LOG("Click on button 2");
+		}
+	}
+	//Other cases here
+
+	default: break;
+	}
+
+	return true;
 }
 
 // Called before quitting

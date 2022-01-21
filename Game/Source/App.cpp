@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Coins.h"
+#include "GuiManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -33,6 +34,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	player = new Player();
 	enemy = new Enemy();
 	coin = new Coins();
+	guiManager = new GuiManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -46,6 +48,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(player);
 	AddModule(enemy);
 	AddModule(coin);
+	AddModule(guiManager);
 
 	// Render last to swap buffer
 	AddModule(render);
