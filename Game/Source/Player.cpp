@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Scene.h"
+#include "GuiManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -319,6 +320,12 @@ bool Player::PostUpdate()
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 		app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
 	}
+	//GUI Menu
+	if (app->scene->MenuState)
+	{
+		app->render->DrawTexture(app->scene->menu, -(app->render->camera.x - 200), -(app->render->camera.y - 50));
+		app->guiManager->Draw();
+	}
 
 	return true;
 }
@@ -379,6 +386,8 @@ bool Player::CleanUp()
 {
 	LOG("Freeing player");
 	app->tex->UnLoad(RangerTex);
+	app->tex->UnLoad(app->scene->menu);
+
 
 	return true;
 }

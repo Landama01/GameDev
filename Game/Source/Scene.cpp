@@ -42,13 +42,14 @@ bool Scene::Start()
 	intro = app->tex->Load("Assets/textures/SceneIntro.png");
 	winScene = app->tex->Load("Assets/textures/WinScene.png");
 	loseScene = app->tex->Load("Assets/textures/LoseScene.png");
+	menu = app->tex->Load("Assets/textures/GUIMenu.png");
 
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
 	app->map->Load("tilesetX2.tmx");
 	
 	//GuiControls
-	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { 1280/2 - 300, 1280 / 10, 160, 40 }, this);
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -(app->render->camera.x - 400), -(app->render->camera.x - 50), 160, 40 }, this);
 
 	// Load music
 	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
@@ -65,9 +66,11 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	
-	if (SceneIntro == false && WinningState == false && LosingState == false)
+	MenuCount = 0;
+
+	if (SceneIntro == false && WinningState == false && LosingState == false && !MenuState)
 	{
+		
 
 		//DEBUG KEYS
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
@@ -107,6 +110,21 @@ bool Scene::Update(float dt)
 		//set camera limits
 	}
 
+	//Menu State
+	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN && SceneIntro == false && WinningState == false && LosingState == false && MenuState == false)
+	{
+		MenuState = true;
+		MenuCount = 1;
+	}
+	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN && MenuState == true && MenuCount == 0)
+	{
+		MenuState = false;
+	}
+	if (SceneIntro == true || WinningState == true || LosingState == true)
+	{
+		MenuState = false;
+	}
+
 	if (app->render->camera.x >= 0)
 		app->render->camera.x = 0;
 
@@ -138,10 +156,7 @@ bool Scene::Update(float dt)
 	if (SceneIntro == true)
 	{
 		app->render->DrawTexture(intro, 0, -topLimit);
-	}
-
-	//Draw GUI
-	app->guiManager->Draw();
+	}	
 
 	// L03: DONE 7: Set the window title with map/tileset info
 	/*SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
@@ -150,7 +165,7 @@ bool Scene::Update(float dt)
 		app->map->mapData.tilesets.count());
 
 	app->win->SetTitle(title.GetString());*/
-	
+
 	if (WinningState == true && SceneIntro == false)
 	{
 		if (timer <= 2 * sec)
@@ -228,11 +243,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		if (control->id == 1)
 		{
 			LOG("Click on button 1");
-		}
-		if (control->id == 2)
-		{
-			LOG("Click on button 2");
-		}
+		}		
 	}
 	//Other cases here
 

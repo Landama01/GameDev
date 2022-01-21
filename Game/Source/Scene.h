@@ -38,11 +38,16 @@ public:
 	bool SceneIntro = true;
 	bool WinningState = false;
 	bool LosingState = false;
+	bool MenuState = false;
 
 	float MidCamPos;
 
 	float timer = 0;
 	float sec = 60;
+
+	int MenuCount;
+
+	SDL_Texture* menu;
 
 private:
 	GuiButton* playButton;
@@ -50,7 +55,7 @@ private:
 	SDL_Texture* background;
 	SDL_Texture* intro;
 	SDL_Texture* winScene;
-	SDL_Texture* loseScene;
+	SDL_Texture* loseScene;	
 };
 
 #endif // __SCENE_H__

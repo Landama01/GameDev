@@ -44,10 +44,10 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(audio);
 	AddModule(pathfinding);
 	AddModule(scene);
-	AddModule(map);
-	AddModule(player);
+	AddModule(map);	
 	AddModule(enemy);
 	AddModule(coin);
+	AddModule(player);
 	AddModule(guiManager);
 
 	// Render last to swap buffer
