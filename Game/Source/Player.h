@@ -39,8 +39,6 @@ public:
 
 	void ControlsGameMode();
 
-	void ControlsForGodMode();
-
 	// Called before all Updates
 	bool PostUpdate();
 

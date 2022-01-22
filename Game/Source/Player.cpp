@@ -155,7 +155,7 @@ bool Player::Update(float dt)
 	}
 
 
-	if (app->scene->SceneIntro == false && GodMode == false)
+	if (!app->scene->SceneIntro && !GodMode && !app->scene->MenuState)
 	{
 		tmpPos = position;
 
@@ -201,9 +201,11 @@ bool Player::Update(float dt)
 				break;
 			}				
 		}
-
-		ControlsGameMode();
-
+		if (!app->scene->MenuState)
+		{
+			ControlsGameMode();
+		}
+		
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN  && !Jumping)
 		{
 			Jump();
@@ -239,7 +241,31 @@ bool Player::Update(float dt)
 	}
 	if (GodMode)
 	{
-		ControlsForGodMode();
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
+		{
+			position.x -= velocity.x * dt;
+			currentAnimation = &RunLeft;
+			goingLeft = true;
+			goingRight = false;
+
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
+		{
+			position.x += velocity.x * dt;
+			currentAnimation = &RunRight;
+			goingLeft = false;
+			goingRight = true;
+
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.y >= -130)
+		{
+			position.y -= velocity.y * dt;
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.y <= 528)
+		{
+			position.y += velocity.y * dt;
+		}
 	}
 	currentAnimation->Update();
 
@@ -281,35 +307,6 @@ void Player::ControlsGameMode()
 			goingLeft = false;
 			goingRight = true;
 		}
-	}
-}
-
-void Player::ControlsForGodMode()
-{
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0)
-	{
-		position.x -= velocity.x;
-		currentAnimation = &RunLeft;
-		goingLeft = true;
-		goingRight = false;
-
-	}
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32)
-	{
-		position.x += velocity.x;
-		currentAnimation = &RunRight;
-		goingLeft = false;
-		goingRight = true;
-
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.y >= -130)
-	{
-		position.y -= velocity.y;
-	}
-	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.y <= 528)
-	{
-		position.y += velocity.y;
 	}
 }
 

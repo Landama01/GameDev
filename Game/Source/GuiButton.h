@@ -17,6 +17,7 @@ public:
 	bool Draw(Render* render);
 
 	int mouseX, mouseY;
+	int mouseYFix;
 	unsigned int click;
 
 	bool canClick = true;
