@@ -3,6 +3,8 @@
 
 #include "Module.h"
 #include "GuiButton.h"
+#include "GuiSlider.h"
+#include "GuiCheckBox.h"
 
 struct SDL_Texture;
 
@@ -30,6 +32,8 @@ public:
 	// Called before all Updates
 	bool PostUpdate();
 
+	void Menu();
+
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	// Called before quitting
@@ -51,6 +55,8 @@ public:
 
 private:
 	GuiButton* playButton;
+	GuiSlider* slider;
+	GuiCheckBox* checkbox;
 
 	SDL_Texture* background;
 	SDL_Texture* intro;

@@ -72,6 +72,8 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
+	LOG("camera x : %d", camera.x);
+	LOG("camera y : %d", camera.y);
 	return true;
 }
 

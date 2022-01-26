@@ -46,10 +46,7 @@ bool Scene::Start()
 
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
-	app->map->Load("tilesetX2.tmx");
-	
-	//GuiControls
-	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -(app->render->camera.x - 400), -(app->render->camera.x - 50), 160, 40 }, this);
+	app->map->Load("tilesetX2.tmx");	
 
 	// Load music
 	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
@@ -147,12 +144,20 @@ bool Scene::Update(float dt)
 	{
 		if (app->player->position.x <= app->enemy->position.x && app->player->position.x + 35 > app->enemy->position.x)
 			LosingState = true;
-	}*/	
+	}*/
 
 	app->render->DrawTexture(background, 0, -topLimit);
 	// Draw map
 	app->map->Draw();
 		
+	if (MenuState)
+	{
+		Menu();
+		playButton->Update(dt);
+		slider->Update(dt);
+		checkbox->Update(dt);
+	}
+
 	if (SceneIntro == true)
 	{
 		app->render->DrawTexture(intro, 0, -topLimit);
@@ -232,6 +237,14 @@ bool Scene::PostUpdate()
 	return ret;
 }
 
+void Scene::Menu()
+{
+	//GuiControls
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -app->render->camera.x + 400, -app->render->camera.x + 50, 160, 40 }, this);
+	slider = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "AAAA", { -app->render->camera.x + 400, -(app->render->camera.x - 150), 30, 28 }, this);
+	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "BBBB", { -app->render->camera.x + 400, -app->render->camera.x + 250, 40, 40 }, this);
+}
+
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
 
@@ -246,7 +259,20 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		}		
 	}
 	//Other cases here
-
+	case GuiControlType::SLIDER:
+	{
+		if (control->id == 1)
+		{
+			LOG("Click on slider 1");
+		}
+	}
+	case GuiControlType::CHECKBOX:
+	{
+		if (control->id == 1)
+		{
+			LOG("Click on checkbox 1");
+		}
+	}
 	default: break;
 	}
 

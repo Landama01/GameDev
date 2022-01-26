@@ -343,7 +343,7 @@ int Player::CheckCollision(iPoint positionMap)
 	typeTilePlayer -= firstgidLayerCollisions;
 
 
-	LOG(" Cordenada Y %d  cordenada  X %d", pos.y, pos.x);
+	//LOG(" Cordenada Y %d  cordenada  X %d", pos.y, pos.x);
 
 	if (typeTilePlayer == 0) {
 	

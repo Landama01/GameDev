@@ -2,6 +2,7 @@
 #include "Render.h"
 #include "App.h"
 #include "Audio.h"
+#include "Window.h"
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -24,6 +25,9 @@ bool GuiButton::Update(float dt)
 		int mouseX, mouseY;
 		app->input->GetMousePosition(mouseX, mouseY);
 		mouseYFix = mouseY - 130;
+
+		mouseX += -app->render->camera.x / app->win->GetScale();
+		mouseY += -app->render->camera.y / app->win->GetScale();
 
 		if ((mouseX > bounds.x ) && (mouseX < (bounds.x + bounds.w )) &&
 			(mouseYFix > bounds.y ) && (mouseYFix < (bounds.y + bounds.h )))
@@ -62,7 +66,6 @@ bool GuiButton::Draw(Render* render)
 	case GuiControlState::NORMAL:
 	{
 		render->DrawRectangle(bounds, 255, 0, 0, 255);
-
 	} break;
 
 	//L14: TODO 4: Draw the button according the GuiControl State
