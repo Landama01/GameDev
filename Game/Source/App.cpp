@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Coins.h"
+#include "Arrow.h"
 #include "GuiManager.h"
 
 #include "Defs.h"
@@ -34,6 +35,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	player = new Player();
 	enemy = new Enemy();
 	coin = new Coins();
+	arrow = new Arrow();
 	guiManager = new GuiManager();
 
 	// Ordered for awake / Start / Update
@@ -47,6 +49,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map);	
 	AddModule(enemy);
 	AddModule(coin);
+	AddModule(arrow);
 	AddModule(player);
 	AddModule(guiManager);
 

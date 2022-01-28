@@ -23,6 +23,7 @@ class Player;
 class Enemy;
 class PathFinding;
 class Coins;
+class Arrow;
 class GuiManager;
 
 class App
@@ -99,6 +100,7 @@ public:
 	Player* player;
 	Enemy* enemy;
 	Coins* coin;
+	Arrow* arrow;
 	GuiManager* guiManager;
 
 private:

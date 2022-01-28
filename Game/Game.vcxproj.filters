@@ -26,6 +26,7 @@
     <ClCompile Include="Source\GuiManager.cpp" />
     <ClCompile Include="Source\GuiCheckBox.cpp" />
     <ClCompile Include="Source\GuiSlider.cpp" />
+    <ClCompile Include="Source\Arrow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -74,6 +75,7 @@
     <ClInclude Include="Source\GuiControl.h" />
     <ClInclude Include="Source\GuiCheckBox.h" />
     <ClInclude Include="Source\GuiSlider.h" />
+    <ClInclude Include="Source\Arrow.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Scene.h"
+#include "Arrow.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -84,31 +85,40 @@ bool Enemy::Update(float dt)
 
 	if (app->scene->SceneIntro)
 	{
+		dead = false;
 		position.x = 1800;
 		position.y = 235;
 	}
-
-	if (position.x >= 1450 && position.x < 1460)
+	if (dead)
 	{
-		goingRight = true;
-		goingLeft = false;
-	}
-	else if (position.x >= 1820 && position.x < 1830)
-	{
-		goingRight = false;
-		goingLeft = true;
+		position.x = -100;
+		position.y = 0;
 	}
 
-	if (goingRight == true)
+	if (!dead)
 	{
-		position.x += velocity.x;
-		currentAnimation = &RunRight;
-	}
-	if (goingLeft == true)
-	{
-		position.x -= velocity.x;
-		currentAnimation = &RunLeft;
-	}
+		if (position.x >= 1450 && position.x < 1460)
+		{
+			goingRight = true;
+			goingLeft = false;
+		}
+		else if (position.x >= 1820 && position.x < 1830)
+		{
+			goingRight = false;
+			goingLeft = true;
+		}
+
+		if (goingRight == true)
+		{
+			position.x += velocity.x;
+			currentAnimation = &RunRight;
+		}
+		if (goingLeft == true)
+		{
+			position.x -= velocity.x;
+			currentAnimation = &RunLeft;
+		}
+	}	
 
 	if (app->scene->SceneIntro == false)
 	{
@@ -122,6 +132,15 @@ bool Enemy::Update(float dt)
 				break;
 
 			}
+		}
+	}
+
+	//CHECK: hardcoded arrow collision with enemy
+	if (app->arrow->position.x >= position.x && app->arrow->position.x <= position.x + 50)
+	{
+		if (app->arrow->position.y >= position.y && app->arrow->position.y <= position.y + 62)
+		{
+			dead = true;
 		}
 	}
 
@@ -146,7 +165,7 @@ bool Enemy::Update(float dt)
 
 bool Enemy::PostUpdate()
 {
-	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false)
+	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && !dead)
 	{
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 		app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
