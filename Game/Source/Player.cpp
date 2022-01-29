@@ -83,6 +83,23 @@ Player::Player() : Module()
 	JumpingL.PushBack({ 213, 420, 58, 78 });
 	JumpingL.loop = false;
 	JumpingL.speed = 0.06f;
+
+	ShootingR.PushBack({  70, 499, 58, 69});
+	ShootingR.PushBack({ 169, 499, 58, 69 });
+	ShootingR.PushBack({ 264, 499, 58, 69 });
+	ShootingR.PushBack({ 358, 499, 58, 69 });
+	ShootingR.PushBack({ 454, 499, 58, 69 });
+	ShootingR.loop = false;
+	ShootingR.speed = 0.12f;
+
+	ShootingL.PushBack({ 644, 585, 58, 69 });
+	ShootingL.PushBack({ 554, 585, 58, 69 });
+	ShootingL.PushBack({ 438, 585, 58, 69 });
+	ShootingL.PushBack({ 350, 585, 58, 69 });
+	ShootingL.PushBack({ 255, 585, 58, 69 });
+	ShootingL.loop = false;
+	ShootingL.speed = 0.12f;
+
 }
 
 Player::~Player()
@@ -118,8 +135,6 @@ bool Player::Update(float dt)
 
 	if (GodMode)
 	{
-		
-
 		if (position.y <= -130)
 		{
 			velocity.y = 0.0f;
@@ -154,12 +169,50 @@ bool Player::Update(float dt)
 		JumpingL.Reset();
 	}
 
+	if (goingRight)
+	{
+		if (Shooting)
+		{
+			currentAnimation = &ShootingR;			
+			position.y = shootPos.y;
+		}
+		else currentAnimation = &RangerIdleR;
+	}
+	else if (goingLeft)
+	{
+		if (Shooting)
+		{
+			currentAnimation = &ShootingL;			
+			position.y = shootPos.y;
+		}
+		else currentAnimation = &RangerIdleL;
+	}
+
+	if (ShootingR.HasFinished() && Shooting)
+	{
+		ShootingR.Reset();
+		Shooting = false;
+		if (position.y == shootPos.y)
+		{
+			position.y + 5;
+		}		
+	}
+	if (ShootingL.HasFinished() && Shooting)
+	{
+		ShootingL.Reset();
+		Shooting = false;
+		if (position.y == shootPos.y)
+		{
+			position.y + 5;
+		}		
+	}
+
 
 	if (!app->scene->SceneIntro && !GodMode && !app->scene->MenuState)
 	{
 		tmpPos = position;
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping)
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping && !Shooting)
 		{
 			position.x -= velocity.x *dt;
 			currentAnimation = &RunLeft;
@@ -168,7 +221,7 @@ bool Player::Update(float dt)
 			dir = Direction::LEFT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping)
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping && !Shooting)
 		{
 			position.x -= velocity.x *dt ;
 			goingLeft = true;
@@ -176,7 +229,7 @@ bool Player::Update(float dt)
 			dir = Direction::LEFT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping)
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping && !Shooting)
 		{
 			position.x += velocity.x*dt;
 			currentAnimation = &RunRight;
@@ -185,7 +238,7 @@ bool Player::Update(float dt)
 			dir = Direction::RIGHT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping)
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping && !Shooting)
 		{
 			position.x += velocity.x*dt;
 			goingLeft = false;
@@ -193,6 +246,14 @@ bool Player::Update(float dt)
 			dir = Direction::RIGHT;
 
 		}
+
+		if ((app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && !Shooting && !Jumping))
+		{			
+			Shooting = true;
+			normalPos = position;
+			shootPos.y = position.y - 5;
+		}		
+
 		for (int i=0; i < numPoints;i++) 
 		{			
 			if (CheckCollision(iPoint(position.x + pointsCollision[i].x + (velocity.x * dir), position.y + pointsCollision[i].y)))
@@ -212,7 +273,7 @@ bool Player::Update(float dt)
 		}
 
 		//if (position.y < 530 && !GodMode)
-		if ( !GodMode)
+		if ( !GodMode && !Shooting)
 		{
 			
 			tmpPos = position;

@@ -17,7 +17,7 @@ Arrow::Arrow() : Module()
 	name.Create("arrow");
 
 	velocity.y = 0.0f;
-	velocity.x = 0.6f;
+	velocity.x = 1.0f;
 
 	ArrowTimer = 0;
 
@@ -53,7 +53,7 @@ bool Arrow::Update(float dt)
 	//CHECK: implement map collision
 	if (!app->scene->SceneIntro && !app->scene->MenuState)
 	{
-		if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && app->player->goingRight && !ShootingL && !ShootingR)
+		if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && app->player->goingRight && !ShootingL && !ShootingR && !app->player->Jumping)
 		{
 			hit = false;
 			ShootingR = true;
@@ -61,7 +61,7 @@ bool Arrow::Update(float dt)
 			position.x = tmpPos.x + 20;
 			position.y = tmpPos.y + 25;
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && app->player->goingLeft && !ShootingL && !ShootingR)
+		else if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && app->player->goingLeft && !ShootingL && !ShootingR && !app->player->Jumping)
 		{
 			hit = false;
 			ShootingL = true;
@@ -70,7 +70,7 @@ bool Arrow::Update(float dt)
 			position.y = tmpPos.y + 25;
 		}
 
-		if (ShootingR)
+		if (ShootingR && !app->player->Shooting)
 		{
 			position.x += velocity.x * dt;
 			position.y += velocity.y * dt;
@@ -88,7 +88,7 @@ bool Arrow::Update(float dt)
 			}
 		}
 
-		if (ShootingL)
+		if (ShootingL && !app->player->Shooting)
 		{
 			position.x -= velocity.x * dt;
 			position.y += velocity.y * dt;
@@ -120,13 +120,13 @@ bool Arrow::Update(float dt)
 
 bool Arrow::PostUpdate()
 {
-	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && ShootingR && !hit)
+	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && ShootingR && !hit && !app->player->Shooting)
 	{
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 		app->render->DrawTexture(ArrowTex, position.x, position.y, &rect);
 	}
 	
-	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && ShootingL && !hit)
+	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && ShootingL && !hit && !app->player->Shooting)
 	{
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 		app->render->DrawTexture(ArrowTex, position.x, position.y, &rect);

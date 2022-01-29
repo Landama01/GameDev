@@ -62,11 +62,15 @@ public:
 	Direction dir = Direction::RIGHT;
 	bool GodMode = false;
 
+	bool Shooting = false;
+
 	float gravity = 0.01f;
 
 	fPoint velocity;
 	fPoint position;
 	fPoint tmpPos;
+	fPoint shootPos;
+	fPoint normalPos;
 
 	Animation* currentAnimation = nullptr;
 
@@ -76,6 +80,8 @@ public:
 	Animation RunLeft;
 	Animation JumpingR;
 	Animation JumpingL;
+	Animation ShootingR;
+	Animation ShootingL;
 
 	SDL_Texture* RangerTex;
 };
