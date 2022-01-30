@@ -304,9 +304,9 @@ bool Scene::PostUpdate()
 		}
 		point0.x = -app->render->camera.x + WINDOW_WIDTH - 500;
 		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "SCORE:");
-		sprintf_s(scoreText, 12, "%.06d", app->player->playerScore);
+		sprintf_s(scoreText, 12, "%.04d", app->player->playerScore);
 		//app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, "0");
-		app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, "%d", &app->player->playerScore);
+		app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, scoreText);
 	}
 	return ret;
 }
