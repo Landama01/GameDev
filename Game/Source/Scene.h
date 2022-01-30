@@ -65,6 +65,7 @@ public:
 
 	iPoint point0 = { 0,0 };
 	char scoreText[12] = { "\0" };
+	char coinText[12] = { "\0" };
 
 private:
 	GuiButton* playButton;

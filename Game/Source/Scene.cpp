@@ -303,10 +303,16 @@ bool Scene::PostUpdate()
 			app->render->DrawTexture(heart, -app->render->camera.x + 300 + (i* 60), -app->render->camera.y+10, &(heartAnim.GetCurrentFrame()));
 		}
 		point0.x = -app->render->camera.x + WINDOW_WIDTH - 500;
-		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "SCORE:");
 		sprintf_s(scoreText, 12, "%.04d", app->player->playerScore);
-		//app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, "0");
+		sprintf_s(coinText, 12, "%d", app->player->coinScore);
+		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "SCORE:");		
+				
 		app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, scoreText);
+
+		point0.x = -app->render->camera.x;
+		point0.y = -app->render->camera.y+80;
+		app->font->BlitText(point0.x+50, point0.y, app->guiManager->hudFont, "COINS:");
+		app->font->BlitText(point0.x + 275, point0.y, app->guiManager->hudFont, coinText);
 	}
 
 	if (exit == true) return false;
