@@ -86,6 +86,8 @@ bool Arrow::Update(float dt)
 				app->player->onlyOneArrow = false;
 				velocity.y = 0;
 				ArrowTimer = 0;
+				position.x = NULL;
+				position.y = NULL;
 			}
 		}
 
@@ -105,6 +107,8 @@ bool Arrow::Update(float dt)
 				app->player->onlyOneArrow = false;
 				velocity.y = 0;
 				ArrowTimer = 0;
+				position.x = NULL;
+				position.y = NULL;
 			}
 		}
 	}
