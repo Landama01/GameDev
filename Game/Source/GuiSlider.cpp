@@ -10,8 +10,8 @@ GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(
 	this->bounds = bounds;
 	this->boundsSlider = this->bounds;
 	this->text = text;
-	this->minValue = boundsSlider.x - 48;
-	this->maxValue = this->minValue + 290;
+	this->minValue = boundsSlider.x - 40;
+	this->maxValue = this->minValue + 300;
 	ChangeValue();
 }
 
@@ -46,7 +46,6 @@ bool GuiSlider::Update(float dt)
 				bounds.x = mouseX - (bounds.w / 2) / app->win->GetScale();
 				ChangeValue();
 				NotifyObserver();
-				if(id==2) app->audio->PlayFx(guiButtonFx, 0);
 			}
 			
 			else state = GuiControlState::NORMAL;
@@ -60,8 +59,8 @@ bool GuiSlider::Update(float dt)
 bool GuiSlider::Draw(Render* render)
 {
 	SDL_Rect rect = { boundsSlider.x - 50, boundsSlider.y - 1, 300, 30 };
-	render->DrawRectangle({ rect.x - 2, rect.y - 2,rect.w + 4,rect.h + 4 }, 20, 20, 20);
-	render->DrawRectangle(rect, 0, 220, 120, 255);
+	render->DrawRectangle({ rect.x - 2, rect.y - 2,rect.w + 4,rect.h + 4 }, 225, 225, 0, 100);
+	render->DrawRectangle(bounds, 0, 200, 255, 150);
 
 
 	switch (state)
@@ -93,12 +92,7 @@ bool GuiSlider::Draw(Render* render)
 	default:
 		break;
 	}
-
-	if (app->scene->MenuState)
-	{
-		render->DrawRectangle({ rect.x - 2, rect.y - 2,rect.w + 4,rect.h + 4 }, 225, 225, 0, 100);
-		render->DrawRectangle(bounds, 0, 200, 255, 150);
-	}
+	
 
 	return false;
 }
@@ -108,7 +102,7 @@ void GuiSlider::ChangeValue()
 {
 	this->value = bounds.x - minValue;
 
-	if (this->value > 280) this->value = 280;
+	if (this->value > 300) this->value = 300;
 
 	else if (this->value <= 5) this->value = 0;
 }

@@ -40,6 +40,8 @@ private:
 
 	Animation* currentAnimation = nullptr;
 	
+	uint ArrowHitFx = 0;
+
 	Animation ArrowRight;
 	Animation ArrowLeft;
 

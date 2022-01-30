@@ -116,6 +116,8 @@ bool Player::Awake()
 bool Player::Start()
 {
 	RangerTex = app->tex->Load("Assets/textures/Ranger_Spritesheet.png");
+	Poster = app->tex->Load("Assets/textures/TextoCartel.png");
+	ArrowShootFx = app->audio->LoadFx("Assets/audio/fx/shoot.wav");
 
 	return true;
 }
@@ -192,6 +194,7 @@ bool Player::Update(float dt)
 	{
 		ShootingR.Reset();
 		Shooting = false;
+		app->audio->PlayFx(ArrowShootFx, 0);
 		if (position.y == shootPos.y)
 		{
 			position.y + 5;
@@ -201,6 +204,7 @@ bool Player::Update(float dt)
 	{
 		ShootingL.Reset();
 		Shooting = false;
+		app->audio->PlayFx(ArrowShootFx, 0);
 		if (position.y == shootPos.y)
 		{
 			position.y + 5;
@@ -211,8 +215,37 @@ bool Player::Update(float dt)
 	if (!app->scene->SceneIntro && !GodMode && !app->scene->MenuState)
 	{
 		tmpPos = position;
+		LOG("X: %f Y: %f", position.x, position.y);
+		//using stairs
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.x >= 1610 && position.x <= 1640 && position.y >= 340)
+		{
+			climbing = true;
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && position.x >= 1610 && position.x <= 1640 && position.y <= 130)
+		{
+			climbing = true;
+		}
+		else if (position.y >= 380 || position.y <= 130)
+		{
+			climbing = false;
+		}		
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping && !Shooting)
+		if (climbing)
+		{
+			velocity.y = 0.2f;
+
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+			{
+				position.y -= velocity.y * dt;
+			}
+			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+			{
+				position.y += velocity.y * dt;
+			}
+			else position.y = position.y;
+		}		
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && !Jumping && !Shooting && !climbing)
 		{
 			position.x -= velocity.x *dt;
 			currentAnimation = &RunLeft;
@@ -221,7 +254,7 @@ bool Player::Update(float dt)
 			dir = Direction::LEFT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping && !Shooting)
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && position.x > 0 && Jumping && !Shooting && !climbing)
 		{
 			position.x -= velocity.x *dt ;
 			goingLeft = true;
@@ -229,7 +262,7 @@ bool Player::Update(float dt)
 			dir = Direction::LEFT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping && !Shooting)
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && !Jumping && !Shooting && !climbing)
 		{
 			position.x += velocity.x*dt;
 			currentAnimation = &RunRight;
@@ -238,7 +271,7 @@ bool Player::Update(float dt)
 			dir = Direction::RIGHT;
 
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping && !Shooting)
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && position.x < 3200 - 32 && Jumping && !Shooting && !climbing)
 		{
 			position.x += velocity.x*dt;
 			goingLeft = false;
@@ -247,33 +280,38 @@ bool Player::Update(float dt)
 
 		}
 
-		if ((app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && !Shooting && !Jumping))
+		if ((app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT && !Shooting && !Jumping && !onlyOneArrow && !climbing))
 		{			
 			Shooting = true;
+			onlyOneArrow = true;
 			normalPos = position;
 			shootPos.y = position.y - 5;
-		}		
-
-		for (int i=0; i < numPoints;i++) 
-		{			
-			if (CheckCollision(iPoint(position.x + pointsCollision[i].x + (velocity.x * dir), position.y + pointsCollision[i].y)))
-			{
-				position = tmpPos;
-				break;
-			}				
 		}
+
+		if (!climbing)
+		{
+			for (int i = 0; i < numPoints; i++)
+			{
+				if (CheckCollision(iPoint(position.x + pointsCollision[i].x + (velocity.x * dir), position.y + pointsCollision[i].y)))
+				{
+					position = tmpPos;
+					break;
+				}
+			}
+		}
+		
 		if (!app->scene->MenuState)
 		{
 			ControlsGameMode();
 		}
 		
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN  && !Jumping)
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN  && !Jumping && !climbing)
 		{
 			Jump();
 		}
 
 		//if (position.y < 530 && !GodMode)
-		if ( !GodMode && !Shooting)
+		if ( !GodMode && !Shooting && !climbing && !app->scene->playerFalling)
 		{
 			
 			tmpPos = position;
@@ -384,6 +422,14 @@ bool Player::PostUpdate()
 		app->render->DrawTexture(app->scene->menu, -(app->render->camera.x - 200), -(app->render->camera.y - 50));
 		app->guiManager->Draw();
 	}
+	//Tree Poster Text
+	if (position.x >= 1370 && position.x <= 1425)
+	{
+		if (position.y >= 155 && position.y <= 165)
+		{
+			app->render->DrawTexture(Poster, -(app->render->camera.x - 200), -(app->render->camera.y - 50));
+		}
+	}
 
 	return true;
 }
@@ -445,7 +491,7 @@ bool Player::CleanUp()
 	LOG("Freeing player");
 	app->tex->UnLoad(RangerTex);
 	app->tex->UnLoad(app->scene->menu);
-
+	app->tex->UnLoad(Poster);
 
 	return true;
 }

@@ -54,6 +54,7 @@ public:
 	bool goingRight = false;
 	bool Jumping = false;
 	int coinCounter;
+	int lifes = 3;
 
 	static const int numPoints = 8;
 	iPoint pointsCollision[numPoints] = { { 0,0 },{50 , 0},{ 50,31 },{50 ,62 }, {0, 62},{0, 31} ,{25,0 } ,{25,62} };
@@ -63,6 +64,8 @@ public:
 	bool GodMode = false;
 
 	bool Shooting = false;
+	bool onlyOneArrow = false;
+	bool climbing = false;
 
 	float gravity = 0.01f;
 
@@ -84,6 +87,9 @@ public:
 	Animation ShootingL;
 
 	SDL_Texture* RangerTex;
+	SDL_Texture* Poster;
+
+	uint ArrowShootFx = 0;
 };
 
 #endif // __PLAYER_H__

@@ -5,6 +5,7 @@
 #include "GuiButton.h"
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
+#include "Animation.h"
 
 struct SDL_Texture;
 
@@ -39,15 +40,22 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool mainStage = false;
+
 	bool SceneIntro = true;
 	bool WinningState = false;
 	bool LosingState = false;
 	bool MenuState = false;
+	bool playerFalling = false;
+
+	bool mute = false;
 
 	float MidCamPos;
 
 	float timer = 0;
 	float sec = 60;
+
+	float delay = 0;
 
 	int MenuCount;
 
@@ -55,13 +63,19 @@ public:
 
 private:
 	GuiButton* playButton;
-	GuiSlider* slider;
+	GuiSlider* sliderMusic;
+	GuiSlider* sliderFx;
 	GuiCheckBox* checkbox;
 
 	SDL_Texture* background;
 	SDL_Texture* intro;
 	SDL_Texture* winScene;
 	SDL_Texture* loseScene;	
+	SDL_Texture* heart;		
+
+	Animation heartAnim;
+
+	uint UIFx = 0;
 };
 
 #endif // __SCENE_H__

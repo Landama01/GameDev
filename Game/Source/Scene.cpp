@@ -20,6 +20,10 @@
 Scene::Scene() : Module()
 {
 	name.Create("scene");
+
+	heartAnim.PushBack({  0, 0, 40, 40});
+	heartAnim.PushBack({ 50, 0, 40, 40});
+	heartAnim.speed = 0.02f;
 }
 
 // Destructor
@@ -43,13 +47,17 @@ bool Scene::Start()
 	winScene = app->tex->Load("Assets/textures/WinScene.png");
 	loseScene = app->tex->Load("Assets/textures/LoseScene.png");
 	menu = app->tex->Load("Assets/textures/GUIMenu.png");
+	heart = app->tex->Load("Assets/textures/heart.png");
+
+	UIFx = app->audio->LoadFx("Assets/audio/fx/openUI.wav");
 
 	// L03: DONE: Load map
 	//app->map->Load("hello.tmx");
 	app->map->Load("tilesetX2.tmx");	
 
 	// Load music
-	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
+	app->audio->PlayMusic("Assets/audio/music/Intro.ogg");
+
 
 	return true;
 }
@@ -98,10 +106,10 @@ bool Scene::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && app->player->position.y > 0 && !app->player->GodMode)
 			app->render->camera.y -= app->player->velocity.y;
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2 && app->player->position.x <= MidCamPos && !app->player->Shooting)
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->player->position.x <= 3200 - 1280 / 2 && app->player->position.x <= MidCamPos && !app->player->Shooting && !app->player->climbing && !playerFalling)
 			app->render->camera.x += app->player->velocity.x*dt;
 
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2 && app->player->position.x >= MidCamPos && !app->player->Shooting)
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->player->position.x >= 1280 / 2 && app->player->position.x >= MidCamPos && !app->player->Shooting && !app->player->climbing && !playerFalling)
 			app->render->camera.x -= app->player->velocity.x*dt;
 
 		//set camera limits
@@ -112,10 +120,12 @@ bool Scene::Update(float dt)
 	{
 		MenuState = true;
 		MenuCount = 1;
+		app->audio->PlayFx(UIFx, 0);
 	}
 	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN && MenuState == true && MenuCount == 0)
 	{
 		MenuState = false;
+		app->audio->PlayFx(UIFx, 0);
 	}
 	if (SceneIntro == true || WinningState == true || LosingState == true)
 	{
@@ -138,7 +148,35 @@ bool Scene::Update(float dt)
 		WinningState = true;
 
 	if (app->player->position.y >= 600 && LosingState == false)
+	{
+		app->player->lifes--;
+		playerFalling = true;		
+	}		
+	if (playerFalling)
+	{
+		if (timer >= 2 * sec)
+		{
+			//Initial positions
+			app->render->camera.x = 0;
+			app->render->camera.y = 0;
+			app->player->position.x = initPosX;
+			app->player->position.y = initPosY + 185;
+			app->player->goingRight = true;
+			playerFalling = false;
+			timer = 0;
+		}
+		else
+		{
+			app->player->position.y = -400;
+
+			timer++* dt;
+		}
+	}	
+	if (app->player->lifes == 0)
+	{
 		LosingState = true;
+		app->player->lifes = 3;
+	}
 
 	/*if (app->player->position.y <= app->enemy->position.y)
 	{
@@ -154,13 +192,15 @@ bool Scene::Update(float dt)
 	{
 		Menu();
 		playButton->Update(dt);
-		slider->Update(dt);
+		sliderMusic->Update(dt);
+		sliderFx->Update(dt);
 		checkbox->Update(dt);
 	}
 
 	if (SceneIntro == true)
 	{
 		app->render->DrawTexture(intro, 0, -topLimit);
+		//app->audio->PlayMusic("Assets/audio/music/Intro.ogg");
 	}	
 
 	// L03: DONE 7: Set the window title with map/tileset info
@@ -217,6 +257,19 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	if (mute)
+	{
+		app->audio->updateFxVolume(0);
+		app->audio->updateMusicVolume(0);
+	}
+	else if (!mute)
+	{
+		//app->audio->updateFxVolume(sliderFx->ReturnValue());
+		//app->audio->updateMusicVolume(sliderMusic->ReturnValue());
+		app->audio->updateFxVolume(50);
+		app->audio->updateMusicVolume(50);
+	}
+
 	return true;
 }
 
@@ -232,6 +285,24 @@ bool Scene::PostUpdate()
 	{
 		SceneIntro = false;
 		app->coin->active = true;
+		mainStage = true;
+	}
+
+	if (app->player->lifes == 3 && !SceneIntro && !winScene && !loseScene)
+	{
+		app->render->DrawTexture(heart, -app->render->camera.x + 10, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+		app->render->DrawTexture(heart, -app->render->camera.x + 60, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+		app->render->DrawTexture(heart, -app->render->camera.x + 110, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+	}
+	if (app->player->lifes == 2 && !SceneIntro && !winScene && !loseScene)
+	{
+		app->render->DrawTexture(heart, -app->render->camera.x + 10, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+		app->render->DrawTexture(heart, -app->render->camera.x + 60, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+	}
+	if (app->player->lifes == 1 && !SceneIntro && !winScene && !loseScene)
+	{
+		app->render->DrawTexture(heart, -app->render->camera.x + 10, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+
 	}
 
 	return ret;
@@ -241,8 +312,9 @@ void Scene::Menu()
 {
 	//GuiControls
 	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -app->render->camera.x + 400, -app->render->camera.x + 50, 160, 40 }, this);
-	slider = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "AAAA", { -app->render->camera.x + 400, -(app->render->camera.x - 150), 30, 28 }, this);
-	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "BBBB", { -app->render->camera.x + 400, -app->render->camera.x + 250, 40, 40 }, this);
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", { -app->render->camera.x + 400, -(app->render->camera.x - 150), 30, 28 }, this);
+	sliderFx = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 2, "FX", { -app->render->camera.x + 800, -(app->render->camera.x - 150), 30, 28 }, this);
+	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "MUTE", { -app->render->camera.x + 400, -app->render->camera.x + 250, 40, 40 }, this);
 }
 
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
@@ -255,22 +327,28 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		//Checks the GUI element ID
 		if (control->id == 1)
 		{
-			LOG("Click on button 1");
+			MenuState = false;
 		}		
 	}
 	//Other cases here
 	case GuiControlType::SLIDER:
 	{
-		if (control->id == 1)
+		if (control->id == 1 && !mute)
 		{
-			LOG("Click on slider 1");
+			app->audio->updateMusicVolume(sliderMusic->ReturnValue());
+			mute = false;
+		}
+		else if (control->id == 2 && !mute)
+		{
+			app->audio->updateFxVolume(sliderFx->ReturnValue());
+			mute = false;
 		}
 	}
 	case GuiControlType::CHECKBOX:
 	{
 		if (control->id == 1)
 		{
-			LOG("Click on checkbox 1");
+			mute = !mute;
 		}
 	}
 	default: break;

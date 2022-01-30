@@ -42,7 +42,7 @@ bool Arrow::Awake(pugi::xml_node& config)
 bool Arrow::Start()
 {
 	ArrowTex = app->tex->Load("Assets/textures/Arrow.png");
-	
+	ArrowHitFx = app->audio->LoadFx("Assets/audio/fx/arrowHit.wav");
 
 	return true;
 }
@@ -83,6 +83,7 @@ bool Arrow::Update(float dt)
 			if (ArrowTimer * dt >= 100)
 			{
 				ShootingR = false;
+				app->player->onlyOneArrow = false;
 				velocity.y = 0;
 				ArrowTimer = 0;
 			}
@@ -101,6 +102,7 @@ bool Arrow::Update(float dt)
 			if (ArrowTimer * dt >= 100)
 			{
 				ShootingL = false;
+				app->player->onlyOneArrow = false;
 				velocity.y = 0;
 				ArrowTimer = 0;
 			}
@@ -112,6 +114,7 @@ bool Arrow::Update(float dt)
 		if (position.y >= app->enemy->position.y && position.y <= app->enemy->position.y + 62)
 		{
 			hit = true;
+			app->audio->PlayFx(ArrowHitFx, 0);
 		}
 	}
 	
@@ -129,7 +132,7 @@ bool Arrow::PostUpdate()
 	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && ShootingL && !hit && !app->player->Shooting)
 	{
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
-		app->render->DrawTexture(ArrowTex, position.x, position.y, &rect);
+		app->render->DrawTexture(ArrowTex, position.x, position.y, &rect);		
 	}
 
 	return true;

@@ -7,11 +7,13 @@
 	<pathfinding />
 	<scene />
 	<map />
-	<player />
 	<enemy />
 	<coin />
+	<arrow />
+	<player />
+	<guiManager />
 	<renderer>
-		<camera x="0" y="130" />
-		<PlayerPos x="120" y="385.999878" />
+		<camera x="-525" y="130" />
+		<PlayerPos x="1170.57422" y="385.819855" />
 	</renderer>
 </save_state>
