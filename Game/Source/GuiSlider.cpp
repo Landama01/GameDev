@@ -4,6 +4,8 @@
 #include "Render.h"
 #include "Scene.h"
 #include "Window.h"
+#include "ModuleFonts.h"
+#include "GuiManager.h"
 
 GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::SLIDER, id)
 {
@@ -62,6 +64,7 @@ bool GuiSlider::Draw(Render* render)
 	render->DrawRectangle({ rect.x - 2, rect.y - 2,rect.w + 4,rect.h + 4 }, 225, 225, 0, 100);
 	render->DrawRectangle(bounds, 0, 200, 255, 150);
 
+	app->font->BlitText(bounds.x - 300, bounds.y - 10, app->guiManager->hudFont, text.GetString());
 
 	switch (state)
 	{

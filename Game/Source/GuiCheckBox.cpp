@@ -4,6 +4,8 @@
 #include "Audio.h"
 #include "Scene.h"
 #include "Window.h"
+#include "ModuleFonts.h"
+#include "GuiManager.h"
 
 GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::CHECKBOX, id)
 {
@@ -51,6 +53,8 @@ bool GuiCheckBox::Draw(Render* render)
 {
 	render->DrawRectangle({ bounds.x - 2, bounds.y - 2,bounds.w + 4,bounds.h + 4}, 20, 20, 20);	
 	
+	app->font->BlitText(bounds.x - 250, bounds.y, app->guiManager->hudFont, text.GetString());
+
 	switch (state)
 	{
 	case GuiControlState::DISABLED:

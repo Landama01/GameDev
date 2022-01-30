@@ -3,6 +3,8 @@
 #include "App.h"
 #include "Audio.h"
 #include "Window.h"
+#include "ModuleFonts.h"
+#include "GuiManager.h"
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -68,7 +70,6 @@ bool GuiButton::Draw(Render* render)
 		render->DrawRectangle(bounds, 255, 0, 0, 255);
 	} break;
 
-	//L14: TODO 4: Draw the button according the GuiControl State
 	case GuiControlState::FOCUSED:
 	{
 		render->DrawRectangle(bounds, 255, 255, 255, 160);
@@ -78,14 +79,14 @@ bool GuiButton::Draw(Render* render)
 		render->DrawRectangle(bounds, 255, 255, 255, 255);
 	} break;
 
-	/******/
-
 	case GuiControlState::SELECTED: render->DrawRectangle(bounds, 0, 255, 0, 255);
 		break;
 
 	default:
 		break;
 	}
+
+	app->font->BlitText(bounds.x , bounds.y, app->guiManager->hudFont, text.GetString());
 
 	return false;
 }

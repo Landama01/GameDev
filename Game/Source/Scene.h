@@ -50,6 +50,7 @@ public:
 	bool playerFalling = false;
 
 	bool mute = false;
+	bool exit = false;
 
 	float MidCamPos;
 

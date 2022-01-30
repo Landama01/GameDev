@@ -308,16 +308,19 @@ bool Scene::PostUpdate()
 		//app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, "0");
 		app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, scoreText);
 	}
+
+	if (exit == true) return false;
 	return ret;
 }
 
 void Scene::Menu()
 {
 	//GuiControls
-	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -app->render->camera.x + 400, -app->render->camera.y + 50, 160, 40 }, this);
-	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", { -app->render->camera.x + 400, -(app->render->camera.y - 150), 30, 28 }, this);
-	sliderFx = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 2, "FX", { -app->render->camera.x + 800, -(app->render->camera.y - 150), 30, 28 }, this);
-	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "MUTE", { -app->render->camera.x + 400, -app->render->camera.y + 250, 40, 40 }, this);
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "RESUME", { -app->render->camera.x + 350, -app->render->camera.y + 150, 270, 50 }, this);
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, " EXIT", { -app->render->camera.x + 650, -app->render->camera.y + 150, 250, 50 }, this);
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", { -app->render->camera.x + 650, -app->render->camera.y + 240, 30, 28 }, this);
+	sliderFx = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 2, "FX", { -app->render->camera.x + 650, -app->render->camera.y + 310, 30, 28 }, this);
+	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "MUTE", { -app->render->camera.x + 600, -app->render->camera.y + 380, 40, 40 }, this);
 }
 
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
@@ -331,7 +334,11 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		if (control->id == 1)
 		{
 			MenuState = false;
-		}		
+		}	
+		if(control->id == 2)
+		{
+			exit = true;
+		}
 	}
 	//Other cases here
 	case GuiControlType::SLIDER:
