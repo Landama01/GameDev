@@ -7,7 +7,7 @@
 #include "GuiCheckBox.h"
 #include "Animation.h"
 #include "Point.h"
-
+#include "Timer.h"
 struct SDL_Texture;
 
 class Scene : public Module
@@ -54,6 +54,9 @@ public:
 
 	float MidCamPos;
 
+	Timer sceneTimer;
+	float realSceneTime=0;
+
 	float timer = 0;
 	float sec = 60;
 
@@ -66,6 +69,7 @@ public:
 	iPoint point0 = { 0,0 };
 	char scoreText[12] = { "\0" };
 	char coinText[12] = { "\0" };
+	char timerText[12] = { "\0" };
 
 private:
 	GuiButton* playButton;

@@ -11,6 +11,7 @@
 #include "Coins.h"
 #include "GuiManager.h"
 #include "ModuleFonts.h"
+#include "Timer.h"
 
 
 #include "Defs.h"
@@ -44,6 +45,7 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	sceneTimer.Start();
 	background = app->tex->Load("Assets/textures/Background2.png");
 	intro = app->tex->Load("Assets/textures/SceneIntro.png");
 	winScene = app->tex->Load("Assets/textures/WinScene.png");
@@ -271,7 +273,11 @@ bool Scene::Update(float dt)
 		app->audio->updateFxVolume(50);
 		app->audio->updateMusicVolume(50);
 	}
-
+	realSceneTime = sceneTimer.ReadSec();
+	if (app->player->lifes==0)
+	{
+		realSceneTime = 0;
+	}
 	return true;
 }
 
@@ -303,16 +309,20 @@ bool Scene::PostUpdate()
 			app->render->DrawTexture(heart, -app->render->camera.x + 300 + (i* 60), -app->render->camera.y+10, &(heartAnim.GetCurrentFrame()));
 		}
 		point0.x = -app->render->camera.x + WINDOW_WIDTH - 500;
-		sprintf_s(scoreText, 12, "%.04d", app->player->playerScore);
+		sprintf_s(scoreText, 12, "%.05d", app->player->playerScore);
 		sprintf_s(coinText, 12, "%d", app->player->coinScore);
-		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "SCORE:");		
-				
+		sprintf_s(timerText, 12, "%.03f", realSceneTime);
+		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "SCORE:");				
 		app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, scoreText);
 
 		point0.x = -app->render->camera.x;
 		point0.y = -app->render->camera.y+80;
 		app->font->BlitText(point0.x+50, point0.y, app->guiManager->hudFont, "COINS:");
-		app->font->BlitText(point0.x + 275, point0.y, app->guiManager->hudFont, coinText);
+		app->font->BlitText(point0.x + 300, point0.y, app->guiManager->hudFont, coinText);
+
+		point0.x = -app->render->camera.x + WINDOW_WIDTH - 500;
+		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "TIME:");
+		app->font->BlitText(point0.x + 225, point0.y, app->guiManager->hudFont, timerText);
 	}
 
 	if (exit == true) return false;
