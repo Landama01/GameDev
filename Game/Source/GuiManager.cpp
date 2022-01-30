@@ -1,6 +1,10 @@
-#include "GuiManager.h"
+﻿#include "GuiManager.h"
 #include "App.h"
 #include "Textures.h"
+#include "ModuleFonts.h"
+#include "Render.h"
+
+
 
 #include "GuiButton.h"
 #include "GuiSlider.h"
@@ -16,7 +20,9 @@ GuiManager::~GuiManager() {}
 
 bool GuiManager::Start()
 {
+	hudFont = app->font->Load("Assets/Textures/GUI/hud_font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,0123456789им?!*$%&()+-/:;<=>@_      ", 5, 705, 225);
 	return true;
+	
 }
 
 GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char* text, SDL_Rect bounds, Module* observer, SDL_Rect sliderBounds)
@@ -97,7 +103,6 @@ bool GuiManager::Draw() {
 		control->data->Draw(app->render);
 		control = control->next;
 	}
-
 	return true;
 
 }

@@ -6,6 +6,7 @@
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
 #include "Animation.h"
+#include "Point.h"
 
 struct SDL_Texture;
 
@@ -60,6 +61,9 @@ public:
 	int MenuCount;
 
 	SDL_Texture* menu;
+
+	iPoint point0 = { 0,0 };
+	char scoreText[12] = { "\0" };
 
 private:
 	GuiButton* playButton;

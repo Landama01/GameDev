@@ -10,6 +10,8 @@
 #include "Enemy.h"
 #include "Coins.h"
 #include "GuiManager.h"
+#include "ModuleFonts.h"
+
 
 #include "Defs.h"
 #include "Log.h"
@@ -287,34 +289,34 @@ bool Scene::PostUpdate()
 		app->coin->active = true;
 		mainStage = true;
 	}
-
-	if (app->player->lifes == 3 && !SceneIntro && !winScene && !loseScene)
+	
+	// Blit Text de la UI en la escena
+	if (SceneIntro == false && WinningState == false && LosingState == false)
 	{
-		app->render->DrawTexture(heart, -app->render->camera.x + 10, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
-		app->render->DrawTexture(heart, -app->render->camera.x + 60, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
-		app->render->DrawTexture(heart, -app->render->camera.x + 110, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
+		point0.x = -app->render->camera.x;
+		point0.y = -app->render->camera.y+10;
+		
+		app->font->BlitText(point0.x + 50, point0.y, app->guiManager->hudFont, "LIVES");
+		
+		for (int i = 0; i < app->player->lifes; i++)
+		{
+			app->render->DrawTexture(heart, -app->render->camera.x + 300 + (i* 60), -app->render->camera.y+10, &(heartAnim.GetCurrentFrame()));
+		}
+		point0.x = -app->render->camera.x + WINDOW_WIDTH - 500;
+		app->font->BlitText(point0.x, point0.y, app->guiManager->hudFont, "SCORE:");
+		//sprintf_s(scoreText, 12, "%.06d", app->player->playerScore);
+		app->font->BlitText(point0.x +275, point0.y, app->guiManager->hudFont, "0");
 	}
-	if (app->player->lifes == 2 && !SceneIntro && !winScene && !loseScene)
-	{
-		app->render->DrawTexture(heart, -app->render->camera.x + 10, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
-		app->render->DrawTexture(heart, -app->render->camera.x + 60, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
-	}
-	if (app->player->lifes == 1 && !SceneIntro && !winScene && !loseScene)
-	{
-		app->render->DrawTexture(heart, -app->render->camera.x + 10, -app->render->camera.y + 10, &(heartAnim.GetCurrentFrame()));
-
-	}
-
 	return ret;
 }
 
 void Scene::Menu()
 {
 	//GuiControls
-	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -app->render->camera.x + 400, -app->render->camera.x + 50, 160, 40 }, this);
-	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", { -app->render->camera.x + 400, -(app->render->camera.x - 150), 30, 28 }, this);
-	sliderFx = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 2, "FX", { -app->render->camera.x + 800, -(app->render->camera.x - 150), 30, 28 }, this);
-	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "MUTE", { -app->render->camera.x + 400, -app->render->camera.x + 250, 40, 40 }, this);
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "PLAY", { -app->render->camera.x + 400, -app->render->camera.y + 50, 160, 40 }, this);
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 1, "MUSIC", { -app->render->camera.x + 400, -(app->render->camera.y - 150), 30, 28 }, this);
+	sliderFx = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 2, "FX", { -app->render->camera.x + 800, -(app->render->camera.y - 150), 30, 28 }, this);
+	checkbox = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 1, "MUTE", { -app->render->camera.x + 400, -app->render->camera.y + 250, 40, 40 }, this);
 }
 
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)

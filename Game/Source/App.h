@@ -25,6 +25,7 @@ class PathFinding;
 class Coins;
 class Arrow;
 class GuiManager;
+class ModuleFonts;
 
 class App
 {
@@ -102,6 +103,7 @@ public:
 	Coins* coin;
 	Arrow* arrow;
 	GuiManager* guiManager;
+	ModuleFonts* font;
 
 private:
 

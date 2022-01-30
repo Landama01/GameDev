@@ -12,6 +12,7 @@
 #include "Coins.h"
 #include "Arrow.h"
 #include "GuiManager.h"
+#include "ModuleFonts.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -37,6 +38,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	coin = new Coins();
 	arrow = new Arrow();
 	guiManager = new GuiManager();
+	font = new ModuleFonts();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -52,6 +54,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(arrow);
 	AddModule(player);
 	AddModule(guiManager);
+	AddModule(font);
 
 	// Render last to swap buffer
 	AddModule(render);

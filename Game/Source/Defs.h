@@ -13,6 +13,8 @@
 
 #define initPosX 120
 #define initPosY 200
+#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1280
 
 
 // Deletes a buffer

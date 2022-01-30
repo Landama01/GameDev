@@ -141,6 +141,7 @@ bool Enemy::Update(float dt)
 		if (app->arrow->position.y >= position.y && app->arrow->position.y <= position.y + 62)
 		{
 			dead = true;
+			app->player->playerScore += 100;
 		}
 	}
 

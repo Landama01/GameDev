@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "GuiControl.h"
+#include "Point.h"
 
 #include "List.h"
 
@@ -40,6 +41,7 @@ public:
 	float accumulatedTime = 0.0f;
 	float updateMsCycle = 0.0f;
 	bool doLogic = false;
+	int hudFont = 0;	
 
 	SDL_Texture* texture;
 
