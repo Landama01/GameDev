@@ -31,7 +31,7 @@ bool GuiCheckBox::Update(float dt)
 		if ((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.w)) && (mouseY > bounds.y) && (mouseY < (bounds.y + bounds.h)))
 		{
 			state = GuiControlState::FOCUSED;
-			
+
 			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT) state = GuiControlState::PRESSED;
 
 			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
@@ -45,41 +45,42 @@ bool GuiCheckBox::Update(float dt)
 			state = GuiControlState::NORMAL;
 		}
 	}
+	if (app->scene->mute) checked = true;
+	else if (!app->scene->mute) checked = false;
 
 	return false;
 }
 
 bool GuiCheckBox::Draw(Render* render)
 {
-	render->DrawRectangle({ bounds.x - 2, bounds.y - 2,bounds.w + 4,bounds.h + 4}, 20, 20, 20);	
-	
+	render->DrawRectangle({ bounds.x - 2, bounds.y - 2,bounds.w + 4,bounds.h + 4 }, 20, 20, 20);
+
 	app->font->BlitText(bounds.x - 250, bounds.y, app->guiManager->hudFont, text.GetString());
 
 	switch (state)
 	{
 	case GuiControlState::DISABLED:
 	{
-		if (checked) render->DrawRectangle(bounds, 100, 100, 100, 255);
-		else render->DrawRectangle(bounds, 100, 100, 100, 255);
+		render->DrawRectangle(bounds, 0, 0, 0, 0);
 	} break;
 
-	case GuiControlState::NORMAL:  
+	case GuiControlState::NORMAL:
 	{
-		if(id == 1 && checked)	render->DrawRectangle(bounds, 0, 255, 0, 255);
-		else if (id == 1 && !checked)	render->DrawRectangle(bounds, 255, 0, 0, 255);
+		if (id == 1 && checked)	render->DrawRectangle(bounds, 0, 255, 0, 255);
+		if (id == 1 && !checked)	render->DrawRectangle(bounds, 255, 0, 0, 255);
 	} break;
 
-	case GuiControlState::FOCUSED: 
+	case GuiControlState::FOCUSED:
 	{
-		render->DrawRectangle(bounds, 200, 100, 220, 255);
+		render->DrawRectangle(bounds, 255, 255, 255, 160);
 	} break;
 
-	case GuiControlState::PRESSED: 
+	case GuiControlState::PRESSED:
 	{
-		render->DrawRectangle(bounds, 250, 75, 150, 255);
+		render->DrawRectangle(bounds, 255, 255, 255, 255);
 	} break;
 
-	case GuiControlState::SELECTED: 
+	case GuiControlState::SELECTED:
 	{
 		render->DrawRectangle(bounds, 0, 255, 0, 255);
 	} break;
@@ -87,11 +88,6 @@ bool GuiCheckBox::Draw(Render* render)
 	default:
 		break;
 	}
-
-	if (app->scene->MenuState)
-	{
-		render->DrawRectangle({ bounds.x - 2, bounds.y - 2,bounds.w + 4,bounds.h + 4 }, 155, 155, 0, 150);
-	}	
 
 	return false;
 }

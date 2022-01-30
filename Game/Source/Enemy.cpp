@@ -26,33 +26,18 @@ Enemy::Enemy() : Module()
 	velocity.x = 1.5f;
 
 	//Set anims
-	RangerIdleR.PushBack({ 120,9,50,62 });
-	RangerIdleR.PushBack({ 216,9,50,62 });
-	RangerIdleR.PushBack({ 312,11,62,62 });
-	RangerIdleR.PushBack({ 408,11,60,62 });
-	RangerIdleR.PushBack({ 504,11,48,62 });
-	RangerIdleR.PushBack({ 600,11,48,62 });
-	RangerIdleR.speed = 0.044f;
 
-	RunRight.PushBack({ 24,171,50,62 });
-	RunRight.PushBack({ 119,167,46,62 });
-	RunRight.PushBack({ 211,165,46,62 });
-	RunRight.PushBack({ 311,169,46,62 });
-	RunRight.PushBack({ 407,171,50,62 });
-	RunRight.PushBack({ 503,167,50,62 });
-	RunRight.PushBack({ 599,165,50,62 });
-	RunRight.PushBack({ 695,169,50,62 });
-	RunRight.speed = 0.06f;
+	RunRight.PushBack({ 0, 0, 24, 48 });
+	RunRight.PushBack({ 55, 0, 24, 48 });
+	RunRight.PushBack({ 112, 0, 24, 48 });
+	RunRight.PushBack({ 168, 0, 24, 48 });
+	RunRight.speed = 0.1f;
 
-	RunLeft.PushBack({ 695,255,50,62 });
-	RunLeft.PushBack({ 603,251,46,62 });
-	RunLeft.PushBack({ 511,249,46,62 });
-	RunLeft.PushBack({ 411,253,46,62 });
-	RunLeft.PushBack({ 311,255,50,62 });
-	RunLeft.PushBack({ 215,251,50,62 });
-	RunLeft.PushBack({ 119,249,50,62 });
-	RunLeft.PushBack({ 23,253,50,62 });
-	RunLeft.speed = 0.06f;
+	RunLeft.PushBack({ 0, 52, 24, 48 });
+	RunLeft.PushBack({ 56, 52, 24, 48 });
+	RunLeft.PushBack({ 111, 52, 24, 48 });
+	RunLeft.PushBack({ 169, 52, 24, 48 });
+	RunLeft.speed = 0.1f;
 
 }
 
@@ -69,16 +54,18 @@ bool Enemy::Awake()
 
 bool Enemy::Start()
 {
-	RangerTex = app->tex->Load("Assets/textures/Ranger_Spritesheet.png");
+	SkeletonTex = app->tex->Load("Assets/textures/Skeleton.png");
 
 	return true;
 }
 
 bool Enemy::Update(float dt)
 {
+	LOG("enemy X: %f Y: %f", position.x, position.y);
+
 	if (starting == true)
 	{
-		currentAnimation = &RangerIdleR;
+		currentAnimation = &RunRight;
 		goingRight = true;
 		starting = false;
 	}
@@ -169,7 +156,7 @@ bool Enemy::PostUpdate()
 	if (app->scene->SceneIntro == false && app->scene->WinningState == false && app->scene->LosingState == false && !dead)
 	{
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
-		app->render->DrawTexture(RangerTex, position.x, position.y, &rect);
+		app->render->DrawTexture(SkeletonTex, position.x, position.y, &rect);
 	}
 
 	return true;
@@ -206,7 +193,7 @@ int Enemy::CheckCollision(iPoint positionMap)
 bool Enemy::CleanUp()
 {
 	LOG("Freeing player");
-	app->tex->UnLoad(RangerTex);
+	app->tex->UnLoad(SkeletonTex);
 
 	return true;
 }

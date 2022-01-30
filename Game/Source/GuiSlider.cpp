@@ -49,7 +49,7 @@ bool GuiSlider::Update(float dt)
 				ChangeValue();
 				NotifyObserver();
 			}
-			
+
 			else state = GuiControlState::NORMAL;
 		}
 		else state = GuiControlState::NORMAL;
@@ -64,7 +64,7 @@ bool GuiSlider::Draw(Render* render)
 	render->DrawRectangle({ rect.x - 2, rect.y - 2,rect.w + 4,rect.h + 4 }, 225, 225, 0, 100);
 	render->DrawRectangle(bounds, 0, 200, 255, 150);
 
-	app->font->BlitText(bounds.x - 300, bounds.y - 10, app->guiManager->hudFont, text.GetString());
+	app->font->BlitText(boundsSlider.x - 300, boundsSlider.y - 10, app->guiManager->hudFont, text.GetString());
 
 	switch (state)
 	{
@@ -74,7 +74,7 @@ bool GuiSlider::Draw(Render* render)
 		render->DrawRectangle(bounds, 0, 0, 0, 0);
 	} break;
 
-	case GuiControlState::NORMAL: 
+	case GuiControlState::NORMAL:
 	{
 		render->DrawRectangle(bounds, 255, 0, 0, 255);
 	} break;
@@ -84,7 +84,7 @@ bool GuiSlider::Draw(Render* render)
 		render->DrawRectangle(bounds, 255, 255, 255, 160);
 	} break;
 
-	case GuiControlState::PRESSED: 
+	case GuiControlState::PRESSED:
 	{
 		render->DrawRectangle(bounds, 255, 255, 255, 255);
 	} break;
@@ -95,7 +95,7 @@ bool GuiSlider::Draw(Render* render)
 	default:
 		break;
 	}
-	
+
 
 	return false;
 }

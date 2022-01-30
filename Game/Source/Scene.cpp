@@ -182,11 +182,18 @@ bool Scene::Update(float dt)
 		app->player->lifes = 3;
 	}
 
-	/*if (app->player->position.y <= app->enemy->position.y)
+	if (app->enemy->position.y <= app->player->position.y + 62  && !app->player->GodMode)
 	{
-		if (app->player->position.x <= app->enemy->position.x && app->player->position.x + 35 > app->enemy->position.x)
-			LosingState = true;
-	}*/
+		if (app->player->position.x + 50 >= app->enemy->position.x && app->player->position.x <= app->enemy->position.x + 24)
+		{
+			app->player->lifes--;
+			playerFalling = true;
+			app->player->position.x = -150;
+		}
+		
+	}
+
+	
 
 	app->render->DrawTexture(background, 0, -topLimit);
 	// Draw map
@@ -195,25 +202,12 @@ bool Scene::Update(float dt)
 	if (MenuState)
 	{
 		Menu();
-		playButton->Update(dt);
-		sliderMusic->Update(dt);
-		sliderFx->Update(dt);
-		checkbox->Update(dt);
 	}
 
 	if (SceneIntro == true)
 	{
 		app->render->DrawTexture(intro, 0, -topLimit);
-		//app->audio->PlayMusic("Assets/audio/music/Intro.ogg");
 	}	
-
-	// L03: DONE 7: Set the window title with map/tileset info
-	/*SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
-		app->map->mapData.width, app->map->mapData.height,
-		app->map->mapData.tileWidth, app->map->mapData.tileHeight,
-		app->map->mapData.tilesets.count());
-
-	app->win->SetTitle(title.GetString());*/
 
 	if (WinningState == true && SceneIntro == false)
 	{

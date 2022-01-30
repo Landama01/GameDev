@@ -215,7 +215,7 @@ bool Player::Update(float dt)
 	if (!app->scene->SceneIntro && !GodMode && !app->scene->MenuState)
 	{
 		tmpPos = position;
-		LOG("X: %f Y: %f", position.x, position.y);
+		LOG("player X: %f Y: %f", position.x, position.y);
 		//using stairs
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && position.x >= 1610 && position.x <= 1640 && position.y >= 340)
 		{

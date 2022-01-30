@@ -73,6 +73,7 @@ public:
 
 private:
 	GuiButton* playButton;
+	GuiButton* exitButton;
 	GuiSlider* sliderMusic;
 	GuiSlider* sliderFx;
 	GuiCheckBox* checkbox;

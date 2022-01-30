@@ -39,7 +39,7 @@ public:
 	bool dead = false;
 
 	static const int numPoints = 8;
-	iPoint pointsCollision[numPoints] = { { 0,0 },{50 , 0},{ 50,31 },{50 ,62 }, {0, 62},{0, 31} ,{25,0 } ,{25,62} };
+	iPoint pointsCollision[numPoints] = { { 0,0 },{24 , 0},{ 24,48 },{0 ,48 } };
 
 	Direction dir = Direction::RIGHT;
 
@@ -55,7 +55,7 @@ public:
 	Animation RunRight;
 	Animation RunLeft;
 
-	SDL_Texture* RangerTex;
+	SDL_Texture* SkeletonTex;
 };
 
 #endif // __ENEMY_H__
